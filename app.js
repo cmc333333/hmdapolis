@@ -54,7 +54,6 @@ HMDA.models.square = Backbone.Model.extend({
 });
 
 HMDA.collections.squares = Backbone.Collection.extend({
-
   width: 8,
   height: 9
 
@@ -103,35 +102,20 @@ HMDA.views.square = Backbone.View.extend({
   },
 
   getNeighbors: function(x, y) {
-
-    var findSquare = function(x, y) {
-      return 'li[data-x="' + x + '"][data-y="' + y + '"]';
-    };
-
-    var $square = $(findSquare(x, y)),
-        isEvenRow = $square.parents('ul.even').length > 0 ? true : false,
-        s1, s2, s3, s4, s5, s6;
-
-    if (isEvenRow === true) {
-      s1 = findSquare(x - 1, y - 1);
-      s2 = findSquare(x, y - 1);
-      s3 = findSquare(x + 1, y);
-      s4 = findSquare(x, y + 1);
-      s5 = findSquare(x - 1, y + 1);
-      s6 = findSquare(x - 1, y);
-    } else {
-      s1 = findSquare(x, y - 1);
-      s2 = findSquare(x + 1, y - 1);
-      s3 = findSquare(x + 1, y);
-      s4 = findSquare(x + 1, y + 1);
-      s5 = findSquare(x, y + 1);
-      s6 = findSquare(x - 1, y);
-    }
-
-    var neighbors = new Array($(s1), $(s2), $(s3), $(s4), $(s5), $(s6));
-
+    //  Odd rows are off kilter. Account for that
+    var odd_offset = y % 2 * -1;
+    var pairs = [[-1, odd_offset], [-1, odd_offset + 1],  
+                [0, -1], [0, 1],
+                [1, odd_offset], [1,odd_offset + 1]];
+    var neighbors = Array();
+    _.each(pairs, function(pair) {
+        var mod_x = x + pair[1];
+        var mod_y = y + pair[0];
+        if (HMDA.board.matrix[mod_y] && HMDA.board.matrix[mod_y][mod_x]) {
+            neighbors.push($(HMDA.board.matrix[mod_y][mod_x].$el));
+        }
+    });
     return neighbors;
-
   },
 
   playSquare: function() {
@@ -184,15 +168,17 @@ HMDA.views.board = Backbone.View.extend({
 
   initialize: function() {
     _.bindAll(this, 'render');
-    this.populate_board();
+    this.populate();
     this.render();
   },
 
-    populate_board: function() {
+    populate: function() {
         this.matrix = new Array();
         for (var row = 0; row < this.collection.height; row += 1) {
             this.matrix[row] = Array();
-            for (var col = 0; col < this.collection.width; col += 1) {
+            var row_width = (row % 2 === 0) ?
+                this.collection.width - 1: this.collection.width;
+            for (var col = 0; col < row_width; col += 1) {
                 this.matrix[row][col] = new HMDA.views.square({
                     model: new HMDA.models.square({x:col, y:row})
                 });
@@ -201,13 +187,11 @@ HMDA.views.board = Backbone.View.extend({
     },
 
   render: function() {
-    for (var row = 0; row < this.collection.height; row += 1) {
+    for (var row = 0; row < this.matrix.length; row += 1) {
         var row_ul = document.createElement('ul');
-        var width = (row % 2 === 0) ? 
-                    this.collection.width - 1: this.collection.width;
         var stripe = (row % 2 === 0) ? 'odd': 'even';
         row_ul.className = 'row ' + stripe;
-        for (var col = 0; col < width; col += 1) {
+        for (var col = 0; col < this.matrix[row].length; col += 1) {
             row_ul.appendChild(this.matrix[row][col].el);
         }
         this.$el.append(row_ul);
