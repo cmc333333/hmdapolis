@@ -46,10 +46,10 @@ HMDA.collections.squares = Backbone.Collection.extend({
 
 HMDA.views.square = Backbone.View.extend({
 
-  tagName: 'td',
+  tagName: 'li',
 
   events: {
-    'click': 'playSquare' 
+    'click': 'playSquare'
   },
 
   initialize: function() {
@@ -77,11 +77,56 @@ HMDA.views.square = Backbone.View.extend({
     } else if (this.model.get('type') === null) {
       this.$el.addClass('null');
     }
-    this.$el.html(this.model.get('value'));
+    this.$el.html('<span>' + this.model.get('value') + '</span>').attr('data-x', this.model.get('x')).attr('data-y', this.model.get('y'));
     return this;
   },
 
+  getNeighbors: function(x, y) {
+
+    var findSquare = function(x, y) {
+      return 'li[data-x="' + x + '"][data-y="' + y + '"]';
+    };
+
+    var $square = $(findSquare(x, y)),
+        isEvenRow = $square.parents('ul.even').length > 0 ? true : false,
+        s1, s2, s3, s4, s5, s6;
+
+    if (isEvenRow === true) {
+      s1 = findSquare(x - 1, y - 1);
+      s2 = findSquare(x, y - 1);
+      s3 = findSquare(x + 1, y);
+      s4 = findSquare(x, y + 1);
+      s5 = findSquare(x - 1, y + 1);
+      s6 = findSquare(x - 1, y);
+    } else {
+      s1 = findSquare(x, y - 1);
+      s2 = findSquare(x + 1, y - 1);
+      s3 = findSquare(x + 1, y);
+      s4 = findSquare(x + 1, y + 1);
+      s5 = findSquare(x, y + 1);
+      s6 = findSquare(x - 1, y);
+    }
+
+    var neighbors = new Array($(s1), $(s2), $(s3), $(s4), $(s5), $(s6)),
+        bordersCity = false;
+
+    return neighbors;
+
+  },
+
   playSquare: function() {
+    //console.log(this.model.get('x') + ' ' + this.model.get('y'));
+    var x = this.model.get('x'),
+        y = this.model.get('y');
+
+    _.each(this.getNeighbors(x, y), function(item){
+      item.fadeOut();
+    });
+
+    //$(s1).find('span').css('background-color', 'blue');
+
+    //
+    /*
     this.model.getStats();
     var p = prompt('Player name');
     if (p === 'null') {
@@ -91,13 +136,14 @@ HMDA.views.square = Backbone.View.extend({
       this.model.set('owner', p);
     }
     this.render();
+    */
   }
 
 });
 
 HMDA.views.board = Backbone.View.extend({
 
-  el: 'table',
+  el: '#board',
 
   events: {
 
@@ -111,9 +157,12 @@ HMDA.views.board = Backbone.View.extend({
   render: function() {
 
     for (var i = 0; i < this.collection.height; i += 1) {
-      var row = document.createElement('tr');
-      for (var j = 0; j < this.collection.width; j += 1) {
-        var square = new HMDA.views.square({model: new HMDA.models.square({x:i,y:j})});
+      var row = document.createElement('ul'),
+          width = (i % 2 == 0) ? this.collection.width - 1 : this.collection.width,
+          stripe = (i % 2 == 0) ? 'odd' : 'even';
+      row.className = 'row ' + stripe;
+      for (var j = 0; j < width; j += 1) {
+        var square = new HMDA.views.square({model: new HMDA.models.square({x:j,y:i})});
         //console.log(square.model.get('x') + ' ' + square.model.get('y'));
         row.appendChild(square.el);
       }
