@@ -27,6 +27,12 @@ HMDA.models.square = Backbone.Model.extend({
 
   dollarize: function(n) {
     return '$' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  },
+
+  getStats: function() {
+    $.getJSON('http://192.168.53.16:8180?callback=?', function(data){
+      console.log(data);
+    });
   }
 
 });
@@ -76,7 +82,7 @@ HMDA.views.square = Backbone.View.extend({
   },
 
   playSquare: function() {
-    //console.log(this.model.toJSON())
+    this.model.getStats();
     var p = prompt('Player name');
     if (p === 'null') {
       this.model.set('type', null);
@@ -108,7 +114,7 @@ HMDA.views.board = Backbone.View.extend({
       var row = document.createElement('tr');
       for (var j = 0; j < this.collection.width; j += 1) {
         var square = new HMDA.views.square({model: new HMDA.models.square({x:i,y:j})});
-        console.log(square.model.get('x') + ' ' + square.model.get('y'));
+        //console.log(square.model.get('x') + ' ' + square.model.get('y'));
         row.appendChild(square.el);
       }
       this.$el.append(row);
