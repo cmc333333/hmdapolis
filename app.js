@@ -184,24 +184,34 @@ HMDA.views.board = Backbone.View.extend({
 
   initialize: function() {
     _.bindAll(this, 'render');
+    this.populate_board();
     this.render();
   },
 
+    populate_board: function() {
+        this.matrix = new Array();
+        for (var row = 0; row < this.collection.height; row += 1) {
+            this.matrix[row] = Array();
+            for (var col = 0; col < this.collection.width; col += 1) {
+                this.matrix[row][col] = new HMDA.views.square({
+                    model: new HMDA.models.square({x:col, y:row})
+                });
+            }
+        }
+    },
+
   render: function() {
-
-    for (var i = 0; i < this.collection.height; i += 1) {
-      var row = document.createElement('ul'),
-          width = (i % 2 === 0) ? this.collection.width - 1 : this.collection.width,
-          stripe = (i % 2 === 0) ? 'odd' : 'even';
-      row.className = 'row ' + stripe;
-      for (var j = 0; j < width; j += 1) {
-        var square = new HMDA.views.square({model: new HMDA.models.square({x:j,y:i})});
-        //console.log(square.model.get('x') + ' ' + square.model.get('y'));
-        row.appendChild(square.el);
-      }
-      this.$el.append(row);
+    for (var row = 0; row < this.collection.height; row += 1) {
+        var row_ul = document.createElement('ul');
+        var width = (row % 2 === 0) ? 
+                    this.collection.width - 1: this.collection.width;
+        var stripe = (row % 2 === 0) ? 'odd': 'even';
+        row_ul.className = 'row ' + stripe;
+        for (var col = 0; col < width; col += 1) {
+            row_ul.appendChild(this.matrix[row][col].el);
+        }
+        this.$el.append(row_ul);
     }
-
   }
 
 });
