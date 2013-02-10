@@ -16,6 +16,10 @@ HMDA.models.player = Backbone.Model.extend({
 
 });
 
+HMDA.collections.players = Backbone.Collection.extend({
+
+});
+
 HMDA.models.square = Backbone.Model.extend({
 
   defaults: {
@@ -71,12 +75,6 @@ HMDA.views.player = Backbone.View.extend({
   render: function() {
     this.$el.html(this.model.get('name'));
   }
-
-});
-
-HMDA.collections.players = Backbone.Collection.extend({
-
-  model: 
 
 });
 
@@ -210,7 +208,8 @@ HMDA.views.board = Backbone.View.extend({
 
 $(function(){
 
-  for (var i = 0; i < prompt('How many players will be playing?'); i += 1) {
+  var p = prompt('How many players will be playing?');
+  for (var i = 0; i < p; i += 1) {
     HMDA.players = new HMDA.collections.players({model: new HMDA.models.player});
   }
   HMDA.squares = new HMDA.collections.squares({model: new HMDA.models.square});
