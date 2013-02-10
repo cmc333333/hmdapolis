@@ -37,7 +37,7 @@
 body {
   margin: 0;
   padding: 4px;
-  font-family: arial, veradana, sans-serif;
+  font-family: 'Avenir Next', arial, veradana, sans-serif;
 }
 ul, li {
   margin: 0;
@@ -45,6 +45,21 @@ ul, li {
   list-style-type: none;
 }
 
+/*
+ * Console, bro.
+ */
+
+#console {
+  float: left;
+}
+
+/*
+ * It's a board.
+ */
+
+#board {
+  float: right;
+}
 
 /*
  * Hexagons

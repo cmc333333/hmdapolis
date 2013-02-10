@@ -4,6 +4,18 @@ var HMDA = HMDA || {
   collections: {}
 };
 
+HMDA.models.player = Backbone.Model.extend({
+
+  defaults: {
+    name: 'Player 1',
+    score: 0,
+    income: 0,
+    agency: '',
+    race: 'Cherokee'
+  }
+
+});
+
 HMDA.models.square = Backbone.Model.extend({
 
   defaults: {
@@ -44,6 +56,30 @@ HMDA.collections.squares = Backbone.Collection.extend({
 
 });
 
+HMDA.views.player = Backbone.View.extend({
+
+  tagName: 'li',
+
+  events: {
+
+  },
+
+  initialize: function() {
+    this.render();
+  },
+
+  render: function() {
+    this.$el.html(this.model.get('name'));
+  }
+
+});
+
+HMDA.collections.players = Backbone.Collection.extend({
+
+  model: 
+
+});
+
 HMDA.views.square = Backbone.View.extend({
 
   tagName: 'li',
@@ -66,19 +102,6 @@ HMDA.views.square = Backbone.View.extend({
       this.model.set('value', this.model.dollarize(this.model.getRand(50000, 500000)));
     }
     this.render();
-  },
-
-  render: function() {
-    if (this.model.get('owner')) {
-      this.$el.addClass('chosen');
-      this.model.set('value', this.model.get('value') + '<br />' + this.model.get('owner'));
-    } else if (this.model.get('type') === 'city') {
-      this.$el.addClass('city');
-    } else if (this.model.get('type') === null) {
-      this.$el.addClass('null');
-    }
-    this.$el.html('<span>' + this.model.get('value') + '</span>').attr('data-x', this.model.get('x')).attr('data-y', this.model.get('y'));
-    return this;
   },
 
   getNeighbors: function(x, y) {
@@ -107,8 +130,7 @@ HMDA.views.square = Backbone.View.extend({
       s6 = findSquare(x - 1, y);
     }
 
-    var neighbors = new Array($(s1), $(s2), $(s3), $(s4), $(s5), $(s6)),
-        bordersCity = false;
+    var neighbors = new Array($(s1), $(s2), $(s3), $(s4), $(s5), $(s6));
 
     return neighbors;
 
@@ -137,6 +159,19 @@ HMDA.views.square = Backbone.View.extend({
     }
     this.render();
     */
+  },
+
+  render: function() {
+    if (this.model.get('owner')) {
+      this.$el.addClass('chosen');
+      this.model.set('value', this.model.get('value') + '<br />' + this.model.get('owner'));
+    } else if (this.model.get('type') === 'city') {
+      this.$el.addClass('city');
+    } else if (this.model.get('type') === null) {
+      this.$el.addClass('null');
+    }
+    this.$el.html('<span>' + this.model.get('value') + '</span>').attr('data-x', this.model.get('x')).attr('data-y', this.model.get('y'));
+    return this;
   }
 
 });
@@ -158,8 +193,8 @@ HMDA.views.board = Backbone.View.extend({
 
     for (var i = 0; i < this.collection.height; i += 1) {
       var row = document.createElement('ul'),
-          width = (i % 2 == 0) ? this.collection.width - 1 : this.collection.width,
-          stripe = (i % 2 == 0) ? 'odd' : 'even';
+          width = (i % 2 === 0) ? this.collection.width - 1 : this.collection.width,
+          stripe = (i % 2 === 0) ? 'odd' : 'even';
       row.className = 'row ' + stripe;
       for (var j = 0; j < width; j += 1) {
         var square = new HMDA.views.square({model: new HMDA.models.square({x:j,y:i})});
@@ -175,6 +210,9 @@ HMDA.views.board = Backbone.View.extend({
 
 $(function(){
 
+  for (var i = 0; i < prompt('How many players will be playing?'); i += 1) {
+    HMDA.players = new HMDA.collections.players({model: new HMDA.models.player});
+  }
   HMDA.squares = new HMDA.collections.squares({model: new HMDA.models.square});
   HMDA.board = new HMDA.views.board({collection: HMDA.squares});
 
