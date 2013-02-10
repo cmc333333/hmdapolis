@@ -76,7 +76,7 @@ HMDA.views.square = Backbone.View.extend({
   },
 
   playSquare: function() {
-    console.log(this.model.toJSON())
+    //console.log(this.model.toJSON())
     var p = prompt('Player name');
     if (p === 'null') {
       this.model.set('type', null);
