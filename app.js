@@ -55,8 +55,8 @@ HMDA.models.square = Backbone.Model.extend({
 });
 
 HMDA.collections.squares = Backbone.Collection.extend({
-  width: 8,
-  height: 9
+  width: 7,
+  height: 7
 
 });
 
@@ -176,43 +176,42 @@ HMDA.views.board = Backbone.View.extend({
     this.render();
   },
 
-    populate: function() {
-        this.matrix = new Array();
-        for (var row = 0; row < this.collection.height; row += 1) {
-            this.matrix[row] = Array();
-            var row_width = (row % 2 === 0) ?
-                this.collection.width - 1: this.collection.width;
-            for (var col = 0; col < row_width; col += 1) {
-                var model = new HMDA.models.square({x:col, y:row});
-                model.set('type', 'home');
-                model.set('value', model.dollarize(model.getRand(
-                                50000, 500000)));
-                this.matrix[row][col] = new HMDA.views.square({
-                    model: model
-                });
-            }
+  populate: function() {
+    this.matrix = new Array();
+    for (var row = 0; row < this.collection.height; row += 1) {
+      this.matrix[row] = Array();
+      var row_width = this.collection.width;
+      for (var col = 0; col < row_width; col += 1) {
+        var model = new HMDA.models.square({x:col, y:row});
+        model.set('type', 'home');
+        model.set('value', model.dollarize(model.getRand(
+                        50000, 500000)));
+        this.matrix[row][col] = new HMDA.views.square({
+          model: model
+        });
+      }
+    }
+    //  Now, flip some tiles to cities
+    for (var row = 0; row < this.matrix.length; row += 1) {
+      for (var col = 0; col < this.matrix[row].length; col += 1) {
+        var model = this.matrix[row][col].model;
+        if (!model.getRand(0, 8)) {
+          model.set('type', 'city');
+          model.set('value', model.getCity());
         }
-        //  Now, flip some tiles to cities
-        for (var row = 0; row < this.matrix.length; row += 1) {
-            for (var col = 0; col < this.matrix[row].length; col += 1) {
-                var model = this.matrix[row][col].model;
-                if (!model.getRand(0, 8)) {
-                    model.set('type', 'city');
-                    model.set('value', model.getCity());
-                }
-            }
-        }
-    },
+      }
+    }
+  },
 
   render: function() {
     for (var row = 0; row < this.matrix.length; row += 1) {
-        var row_ul = document.createElement('ul');
-        var stripe = (row % 2 === 0) ? 'odd': 'even';
-        row_ul.className = 'row ' + stripe;
-        for (var col = 0; col < this.matrix[row].length; col += 1) {
-            row_ul.appendChild(this.matrix[row][col].el);
-        }
-        this.$el.append(row_ul);
+      var row_ul = document.createElement('ul');
+      var stripe = (row % 2 === 0) ? 'odd': 'even';
+      row_ul.className = 'row ' + stripe;
+      for (var col = 0; col < this.matrix[row].length; col += 1) {
+        row_ul.appendChild(this.matrix[row][col].el);
+      }
+      this.$el.append(row_ul);
     }
   }
 
