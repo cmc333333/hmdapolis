@@ -1,0 +1,458 @@
+/*
+ * Base
+ */
+
+body {
+  margin: 0;
+  padding: 45px 20px;
+  font-family: 'Oswald', arial, veradana, sans-serif;
+  font-size: 100%;
+  color: #FFFFFF;
+  background: #5C5655;
+  background: white url(http://i396.photobucket.com/albums/pp48/mad626rad/crazybackground10.jpg) no-repeat top left;
+  overflow: hidden;
+}
+p, h1 {
+  margin: 0;
+}
+ul, li {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+
+/*
+ * Layout
+ */
+
+.wrapper {
+  width: 1330px;
+  margin: 0 auto;
+}
+.console {
+  width: 500px;
+  margin-right: 20px;
+  float: left;
+  font-size: 32px;
+}
+.console_block {
+  display: block;
+  margin: 0 0 1px;
+  padding: 20px;
+  background: #5C5655;
+}
+.hexagons {
+  display: block;
+  width: 810px;
+  float: left;
+}
+
+
+/*
+ * Logo
+ */
+
+.console h1 {
+  margin: 0 0 20px;
+  font-size: 75px;
+  line-height: 1;
+}
+.console h1 span {
+  font-weight: 300;
+  font-style: italic;
+}
+
+
+/*
+ * Players
+ */
+
+.players {
+  display: block;
+  padding: 0;
+  background: transparent;
+}
+.players > li {
+  display: block;
+  width: 210px;
+  padding: 20px;
+  float: left;
+  background: #5C5655;
+}
+.players > li:first-child {
+  width: 209px;
+  margin-right: 1px
+}
+
+
+/*
+ * Profile
+ */
+
+.profile li {
+  display: block;
+  margin-right: 10px;
+  float: left;
+}
+.profile b {
+  margin-right: 4px;
+  font-weight: 300;
+}
+.profile .talk {
+  position: relative;
+  font-size: 12px;
+  font-weight: 300;
+  text-align: center;
+  width: 80px;
+  margin: 0 10px 10px;
+  padding: 10px;
+  background: rgba(255,255,255,.1);
+  border-radius: 8px;
+}
+.profile .talk:before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -4px;
+  left: 33%;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  border-left: 4px dotted transparent;
+  border-right: 4px dotted transparent;
+  border-bottom: 4px solid rgba(255,255,255,.1);
+}
+
+
+/*
+ * Message
+ */
+
+.message {
+  font-size: 1.5em;
+}
+
+
+/*
+ * Hexagons
+ * Inspired by: http://www.cssplay.co.uk/menus/hexagon.html
+ */
+
+.hexagons .row {
+  display: block;
+  width: 810px;
+}
+/* Offset odd rows */
+.hexagons .row:nth-child(odd) {
+  width: 756px;
+  margin-left: 54px;
+}
+.hexagons li {
+  display: block;
+  float: left;
+  width: 104px;
+  margin-top: -26px;
+  margin-right: 4px;
+  height: 120px;
+  -webkit-transition: .2s all ease;
+}
+.hexagons .row:first-child > li {
+  margin-top: 0;
+}
+.hexagons li > span {
+  display: block;
+  width: 104px;
+  height: 60px;
+  line-height: 59px;
+  overflow: hidden;
+  text-align: center;
+}
+.hexagons li:before,
+.hexagons li:after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  border-left: 52px dotted transparent;
+  border-right: 52px dotted transparent;
+}
+.hexagons li:before {
+  border-bottom-width: 30px;
+  border-bottom-style: solid;
+}
+.hexagons li:after {
+  border-top-width: 30px;
+  border-top-style: solid;
+}
+.hexagons li > span,
+.hexagons li:before,
+.hexagons li:after {
+  -webkit-transition: .2s all ease;
+}
+
+
+/*
+ * Colors / Decorations / Icons / Backgrounds
+ */
+
+.icon-holder {
+  font-size: 1.1em;
+  margin-right: 8px;  
+}
+
+/* Player console */
+.players .player-1 {
+  background: #264859;
+}
+.players .player-2 {
+  background: #FF5E2C;
+}
+
+/* Messages */
+.message.message-denied {
+  background: #D44655;
+}
+.message.message-denied .icon-holder:before {
+  content: "\f05e";
+}
+.message.message-approved {
+  background: #43AB7E;
+}
+.message.message-approved .icon-holder:before {
+  content: "\f00c";
+}
+.message.message-waiting .icon-holder:before {
+  content: "\f110";
+}
+
+/* Default tile */
+.hexagons {
+  color: #43AB7E;
+}
+.hexagons li > span {
+  background: #E8E8E8;
+}
+.hexagons li:before {
+  border-bottom-color: #E8E8E8;
+}
+.hexagons li:after {
+  border-top-color: #E8E8E8;
+}
+
+/* City tile */
+.hexagons .city > span {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 94px;
+  background: transparent;
+}
+.hexagons .city:before,
+.hexagons .city:after {
+  border-color: transparent;
+}
+.hexagons .city {
+  color: white;
+  background: transparent url(../img/skyline.png) no-repeat left top;
+  background-size: 104px;
+}
+/*.hexagons .city > span {
+  background: #5C5655;
+}
+.hexagons .city {
+  color: white;
+}
+.hexagons .city:before {
+  border-bottom-color: #5C5655;
+}
+.hexagons .city:after {
+  border-top-color: #5C5655;
+}*/
+
+/* Null tile */
+.hexagons .null {
+  opacity: 0.2;
+  color: #5C5655;
+}
+
+/* Player tiles */
+.hexagons .player-1 > span {
+  background: #264859;
+}
+.hexagons .player-1 {
+  color: rgba(255,255,255,0.5);
+}
+.hexagons .player-1:before {
+  border-bottom-color: #264859;
+}
+.hexagons .player-1:after {
+  border-top-color: #264859;
+}
+.hexagons .player-2 > span {
+  background: #FF5E2C;
+}
+.hexagons .player-2 {
+  color: rgba(255,255,255,0.5);
+}
+.hexagons .player-2:before {
+  border-bottom-color: #FF5E2C;
+}
+.hexagons .player-2:after {
+  border-top-color: #FF5E2C;
+}
+
+
+/*
+ * Interaction and Cursor
+ */
+
+* {
+  cursor: default;
+}
+.hexagons li * {
+  cursor: pointer;
+}
+.hexagons .city *,
+.hexagons .null *,
+.hexagons .player-1 *,
+.hexagons .player-2 * {
+  cursor: default;
+}
+
+.hexagons li:hover {
+  -webkit-transform: scale3d(.9, .9, 1);
+}
+.hexagons .city:hover,
+.hexagons .null:hover,
+.hexagons .player-1:hover,
+.hexagons .player-2:hover {
+  -webkit-transform: none;
+}
+
+
+/*
+ * States
+ */
+
+/* Players */
+.s-player-1 .player-1 .icon-holder:before,
+.s-player-2 .player-2 .icon-holder:before {
+  content: "\f00c";
+}
+.s-winner-player-1 .player-1 .icon-holder:before,
+.s-winner-player-2 .player-2 .icon-holder:before {
+  content: "\f091";
+}
+.s-winner-player-1 .players .player-2,
+.s-winner-player-2 .players .player-1 {
+  display: none;
+}
+
+/* Profile */
+.s-player-1 .profile,
+.s-player-1 .message-waiting {
+  background: #264859;
+}
+.s-player-2 .profile,
+.s-player-2 .message-waiting  {
+  background: #FF5E2C;
+}
+.s-winner-player-1 .profile,
+.s-winner-player-2 .profile {
+  display: none;
+}
+
+/* Messages */
+.message {
+  display: none;
+}
+.s-waiting .message.message-waiting,
+.s-denied .message.message-denied,
+.s-approved .message.message-approved {
+  display: block;
+}
+
+/* Tiles */
+.s-waiting .hexagons .s-waiting {
+  -webkit-animation-duration: .7s;
+  -webkit-animation-name: myfirst;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+}
+
+@-webkit-keyframes myfirst {
+    from {
+      -webkit-transform: rotateY(0deg);
+    }
+
+    to {
+      -webkit-transform: rotateY(360deg);
+    }
+}
+
+
+/*
+ * Overlay (not being used)
+ */
+
+#overlay {
+  background: rgba(0,0,0,0.8);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: none;
+}
+#overlay.s-active {
+  display: block;
+}
+#overlay .inner {
+  width: 300px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -60px 0 0 -150px;
+  font-size: 32px;
+}
+
+
+/*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    `contenteditable` attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+
+.wrapper:before,
+.wrapper:after,
+.row:before,
+.row:after,
+.console_block:before,
+.console_block:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.wrapper:after,
+.row:after,
+.console_block:after {
+    clear: both;
+}
+
+/*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+
+.wrapper,
+.row,
+.console_block {
+    *zoom: 1;
+}

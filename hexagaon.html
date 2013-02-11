@@ -1,0 +1,120 @@
+<html>
+  <head>
+    <link href='http://fonts.googleapis.com/css?family=Oswald:400,300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/board.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+  </head>
+  <!--
+    s-waiting
+    s-denied
+    s-approved
+    s-player-1 (player 1's turn)
+    s-player-2 (player 2's turn)
+    s-winner-player-1
+    s-winner-player-2
+  -->
+  <body class="s-player-1">
+    <div class="wrapper">
+      
+      <div class="console">
+        
+        <h1>HMDA<span>polis</span></h1>
+        
+        <ul class="console_block players">
+          <li class="player-1">Player 1 <i class="icon-holder"></i></li>
+          <li class="player-2">Player 2 <i class="icon-holder"></i></li>
+        </ul>
+        
+        <div class="console_block profile">
+          <ul>
+            <li><i class="icon-user icon-3x"></i> <p class="talk">Help me buy my dream home!<!--Choose responsibly!--></p></li>
+            <li><b>Year:</b> 2009</li>
+            <li><b>Income:</b> $70,000</li>
+            <li><b>Financial Agency:</b> FDIC</li>
+          </ul>
+        </div>
+        
+        <!-- [todo] make reason why accepted/declined -->
+        
+        <!-- Messages -->
+        <div class="console_block message message-waiting"><i class="icon-holder icon-spin"></i> Please wait...</div>
+        <div class="console_block message message-denied"><i class="icon-holder"></i> Denied!</div>
+        <div class="console_block message message-approved"><i class="icon-holder"></i> Approved!</div>
+
+      </div>
+
+      <div id="board" class="hexagons">
+        <ul class="row">
+          <li class="s-waiting"><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+        </ul>
+        <ul class="row">
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li class="null"><span>$127,000</span></li>
+          <li class="player-1"><span>$127,000</span></li>
+          <li class="city"><span>Los Angeles</span></li>
+          <li class="player-2"><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+        </ul>
+        <ul class="row">
+          <li><span>$127,000</span></li>
+          <li class="city"><span>Reno</span></li>
+          <li><span>$127,000</span></li>
+          <li class="null"><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+        </ul>
+        <ul class="row">
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+        </ul>
+        <ul class="row">
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li class="city"><span>Austin</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li class="city"><span>Baltimore</span></li>
+        </ul>
+        <ul class="row">
+          <li><span>$127,000</span></li>
+          <li class="city"><span>New York City</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+        </ul>
+        <ul class="row">
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+          <li><span>$127,000</span></li>
+        </ul>
+      </div>
+
+      <!-- <div id="overlay" class="s-active">
+        <div class="inner console_block message s-denied">
+          <i class="icon-holder"></i> Denied!
+        </div>
+      </div> -->
+
+    </div>
+  </body>
+</html>
