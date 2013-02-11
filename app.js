@@ -4,15 +4,31 @@ var HMDA = HMDA || {
   collections: {}
 };
 
+HMDA.models.game = Backbone.Model.extend({
+
+  defaults: {
+    turn: 0,
+    player: 0
+  }
+
+});
+
 HMDA.models.player = Backbone.Model.extend({
 
   defaults: {
-    name: 'Player 1',
     score: 0,
     income: 0,
     year: 0,
-    agency: '',
-    race: 'Cherokee'
+    agency: ''
+  },
+
+  initialize: function() {
+    this.incrementTurn();
+  },
+
+  incrementTurn: function() {
+    var turn = HMDA.game.get('turn');
+    HMDA.game.set('turn', turn + 1);
   }
 
 });
@@ -72,7 +88,7 @@ HMDA.views.player = Backbone.View.extend({
 
   template: function(player) {
     //return _.template('<div><%= name %></div><div>Income: <%= income %></div><div>Agency: <%= agency %><div>', player);
-    console.log(player);
+    //console.log(player);
     return _.template($('#player-stats').html(), player);
   },
 
@@ -224,9 +240,10 @@ HMDA.views.board = Backbone.View.extend({
 
 $(function(){
 
+  HMDA.game = new HMDA.models.game;
   HMDA.players = new HMDA.collections.players([
     //new HMDA.models.player({name: 'Player 1', income: 120000, year: 2003, agency: 'HUD'}),
-    new HMDA.models.player({name: 'Player 2', income: 70000, year: 2006, agency: 'CFPB'})
+    new HMDA.models.player({income: 70000, year: 2006, agency: 'CFPB'})
   ]);
   HMDA.squares = new HMDA.collections.squares({model: new HMDA.models.square});
   HMDA.board = new HMDA.views.board({collection: HMDA.squares});
