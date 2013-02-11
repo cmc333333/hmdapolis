@@ -456,3 +456,12 @@ ul, li {
 .console_block {
     *zoom: 1;
 }
+
+
+/*
+ * Debugging
+ */
+
+.neighbor {
+  opacity: .5;
+}

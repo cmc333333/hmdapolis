@@ -10,6 +10,7 @@ HMDA.models.player = Backbone.Model.extend({
     name: 'Player 1',
     score: 0,
     income: 0,
+    year: 0,
     agency: '',
     race: 'Cherokee'
   }
@@ -55,6 +56,7 @@ HMDA.models.square = Backbone.Model.extend({
 });
 
 HMDA.collections.squares = Backbone.Collection.extend({
+
   width: 7,
   height: 7
 
@@ -62,22 +64,25 @@ HMDA.collections.squares = Backbone.Collection.extend({
 
 HMDA.views.player = Backbone.View.extend({
 
-  tagName: 'li',
+  tagName: 'div',
 
   events: {
 
   },
 
   template: function(player) {
-    return _.template('<div><%= name %></div><div>Income: <%= income %></div><div>Agency: <%= agency %><div>', player);
+    //return _.template('<div><%= name %></div><div>Income: <%= income %></div><div>Agency: <%= agency %><div>', player);
+    console.log(player);
+    return _.template($('#player-stats').html(), player);
   },
 
   initialize: function() {
-    this.render();
+    //this.render();
   },
 
   render: function() {
-    //console.log(this.model.toJSON());
+    //console.log(this.model);
+    //this.model.set('id', this.model.cid);
     this.$el.html(this.template(this.model.toJSON()));
     return this;
   }
@@ -87,7 +92,7 @@ HMDA.views.player = Backbone.View.extend({
 // players collection views
 HMDA.views.players = Backbone.View.extend({
 
-  tagName: 'ul',
+  el: '.profile',
 
   initialize: function() {
     this.collection.on('add', this.addOne, this);
@@ -99,7 +104,7 @@ HMDA.views.players = Backbone.View.extend({
   },
 
   render: function() {
-    console.log(this.collection);
+    //console.log(this.collection);
     this.collection.each(this.addOne, this);
     return this;
   }
@@ -142,7 +147,7 @@ HMDA.views.square = Backbone.View.extend({
         y = this.model.get('y');
 
     _.each(this.getNeighbors(x, y), function(item){
-      item.fadeOut();
+      item.addClass('neighbor');
     });
 
   },
@@ -220,8 +225,8 @@ HMDA.views.board = Backbone.View.extend({
 $(function(){
 
   HMDA.players = new HMDA.collections.players([
-    new HMDA.models.player({name: 'Player 1', income: 120000, agency: 'HUD'}),
-    new HMDA.models.player({name: 'Player 2', income: 70000, agency: 'CFPB'})
+    //new HMDA.models.player({name: 'Player 1', income: 120000, year: 2003, agency: 'HUD'}),
+    new HMDA.models.player({name: 'Player 2', income: 70000, year: 2006, agency: 'CFPB'})
   ]);
   HMDA.squares = new HMDA.collections.squares({model: new HMDA.models.square});
   HMDA.board = new HMDA.views.board({collection: HMDA.squares});

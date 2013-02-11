@@ -26,12 +26,7 @@
         </ul>
         
         <div class="console_block profile">
-          <ul>
-            <li><i class="icon-user icon-3x"></i> <p class="talk">Help me buy my dream home!<!--Choose responsibly!--></p></li>
-            <li><b>Year:</b> 2009</li>
-            <li><b>Income:</b> $70,000</li>
-            <li><b>Financial Agency:</b> FDIC</li>
-          </ul>
+          
         </div>
         
         <!-- [todo] make reason why accepted/declined -->
@@ -54,6 +49,20 @@
       </div> -->
 
     </div>
+
+    <!-- templates -->
+
+    <script type="text/template" id="player-stats">
+    <ul>
+      <li><i class="icon-user icon-3x"></i> <p class="talk">Help me buy my dream home!<!--Choose responsibly!--></p></li>
+      <li><b>Year:</b> <%= year %></li>
+      <li><b>Income:</b> <%= income %></li>
+      <li><b>Financial Agency:</b> <%= agency %></li>
+    </ul>
+    </script>
+
+    <!-- /templates -->
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
     <!--<script src="http://backbonejs.org/backbone.js"></script> <!-- for debugging -->
