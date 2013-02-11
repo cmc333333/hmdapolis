@@ -115,18 +115,8 @@ HMDA.views.square = Backbone.View.extend({
   },
 
   initialize: function() {
-    _.bindAll(this, 'render', 'populate', 'playSquare');
-    this.populate();
-  },
-
-  populate: function() {
-    if (!this.model.getRand(0, 8)) {
-      this.model.set('type', 'city');
-      this.model.set('value', this.model.getCity());
-    } else {
-      this.model.set('type', 'home');
-      this.model.set('value', this.model.dollarize(this.model.getRand(50000, 500000)));
-    }
+    this.model.on('change', this.render, this);
+    _.bindAll(this, 'render', 'playSquare');
     this.render();
   },
 
@@ -148,7 +138,6 @@ HMDA.views.square = Backbone.View.extend({
   },
 
   playSquare: function() {
-    //console.log(this.model.get('x') + ' ' + this.model.get('y'));
     var x = this.model.get('x'),
         y = this.model.get('y');
 
@@ -156,20 +145,6 @@ HMDA.views.square = Backbone.View.extend({
       item.fadeOut();
     });
 
-    //$(s1).find('span').css('background-color', 'blue');
-
-    //
-    /*
-    this.model.getStats();
-    var p = prompt('Player name');
-    if (p === 'null') {
-      this.model.set('type', null);
-      this.model.set('value', 'X');
-    } else {
-      this.model.set('owner', p);
-    }
-    this.render();
-    */
   },
 
   render: function() {
@@ -208,9 +183,23 @@ HMDA.views.board = Backbone.View.extend({
             var row_width = (row % 2 === 0) ?
                 this.collection.width - 1: this.collection.width;
             for (var col = 0; col < row_width; col += 1) {
+                var model = new HMDA.models.square({x:col, y:row});
+                model.set('type', 'home');
+                model.set('value', model.dollarize(model.getRand(
+                                50000, 500000)));
                 this.matrix[row][col] = new HMDA.views.square({
-                    model: new HMDA.models.square({x:col, y:row})
+                    model: model
                 });
+            }
+        }
+        //  Now, flip some tiles to cities
+        for (var row = 0; row < this.matrix.length; row += 1) {
+            for (var col = 0; col < this.matrix[row].length; col += 1) {
+                var model = this.matrix[row][col].model;
+                if (!model.getRand(0, 8)) {
+                    model.set('type', 'city');
+                    model.set('value', model.getCity());
+                }
             }
         }
     },
