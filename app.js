@@ -18,6 +18,8 @@ HMDA.models.player = Backbone.Model.extend({
 
 HMDA.collections.players = Backbone.Collection.extend({
 
+  model: HMDA.models.player
+
 });
 
 HMDA.models.square = Backbone.Model.extend({
@@ -47,7 +49,6 @@ HMDA.models.square = Backbone.Model.extend({
 
   getStats: function() {
     $.getJSON('http://192.168.53.16:8180?callback=?', function(data){
-      console.log(data);
     });
   }
 
@@ -67,12 +68,40 @@ HMDA.views.player = Backbone.View.extend({
 
   },
 
+  template: function(player) {
+    return _.template('<div><%= name %></div><div>Income: <%= income %></div><div>Agency: <%= agency %><div>', player);
+  },
+
   initialize: function() {
     this.render();
   },
 
   render: function() {
-    this.$el.html(this.model.get('name'));
+    //console.log(this.model.toJSON());
+    this.$el.html(this.template(this.model.toJSON()));
+    return this;
+  }
+
+});
+
+// players collection views
+HMDA.views.players = Backbone.View.extend({
+
+  tagName: 'ul',
+
+  initialize: function() {
+    this.collection.on('add', this.addOne, this);
+  },
+
+  addOne: function(model){
+    var playerView = new HMDA.views.player({model: model});
+    this.$el.append(playerView.render().el);
+  },
+
+  render: function() {
+    console.log(this.collection);
+    this.collection.each(this.addOne, this);
+    return this;
   }
 
 });
@@ -191,11 +220,14 @@ HMDA.views.board = Backbone.View.extend({
 
 $(function(){
 
-  var p = prompt('How many players will be playing?');
-  for (var i = 0; i < p; i += 1) {
-    HMDA.players = new HMDA.collections.players({model: new HMDA.models.player});
-  }
+  HMDA.players = new HMDA.collections.players([
+    new HMDA.models.player({name: 'Player 1', income: 120000, agency: 'HUD'}),
+    new HMDA.models.player({name: 'Player 2', income: 70000, agency: 'CFPB'})
+  ]);
   HMDA.squares = new HMDA.collections.squares({model: new HMDA.models.square});
   HMDA.board = new HMDA.views.board({collection: HMDA.squares});
+  HMDA.playersView = new HMDA.views.players({collection: HMDA.players});
+
+  $('#players').append(HMDA.playersView.render().el);
 
 });

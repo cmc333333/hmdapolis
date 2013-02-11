@@ -53,6 +53,11 @@ ul, li {
   float: left;
 }
 
+#players li {
+  float: left;
+  width: 200px;
+}
+
 /*
  * It's a board.
  */
