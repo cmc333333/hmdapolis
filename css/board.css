@@ -373,24 +373,24 @@ button * {
 .hexagons .city {
   color: white;
   text-shadow: none;
-  background: transparent url(../img/nyc.png) no-repeat left top;
+  background: transparent url(../img/city-1.png) no-repeat left top;
   background-size: 104px;
   background-position-y: 1px;
 }
-.hexagons .city-austin {
-  background-image: url(../img/austin.png);
+.hexagons .city-2 {
+  background-image: url(../img/city-2.png);
 }
-.hexagons .city-baltimore {
-  background-image: url(../img/baltimore.png);
+.hexagons .city-3 {
+  background-image: url(../img/city-3.png);
 }
-.hexagons .city-la {
-  background-image: url(../img/la.png);
+.hexagons .city-4 {
+  background-image: url(../img/city-4.png);
 }
-.hexagons .city-nyc {
-  background-image: url(../img/nyc.png);
+.hexagons .city-5 {
+  background-image: url(../img/city-5.png);
 }
-.hexagons .city-reno {
-  background-image: url(../img/reno.png);
+.hexagons .city-6 {
+  background-image: url(../img/city-6.png);
 }
 /*.hexagons .city > span {
   background: #5C5655;

@@ -360,7 +360,7 @@ HMDA.views.square = Backbone.View.extend({
       this.$el.addClass('chosen');
       this.model.set('text', this.model.get('text') + '<br />' + this.model.get('owner'));
     } else if (this.model.get('type') === 'city') {
-      this.$el.addClass('city');
+      this.$el.addClass('city city-' + HMDA.game.getRand(1, 5));
     } else if (this.model.get('type') === null) {
       this.$el.addClass('null');
     }
