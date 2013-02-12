@@ -320,7 +320,12 @@ HMDA.views.square = Backbone.View.extend({
 
   playSquare: function() {
 
-    console.log(this.model.getStats());
+    if (this.$el.hasClass('null')) {
+      return;
+    }
+
+    HMDA.game.trigger('loading');
+    this.$el.addClass('s-waiting');
 
     var x = this.model.get('x'),
         y = this.model.get('y');
