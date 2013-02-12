@@ -146,9 +146,17 @@ HMDA.models.person = Backbone.Model.extend({
 
   initialize: function() {
 
-    this.set('income', HMDA.game.dollarize(HMDA.game.getRand(20000, 130000)));
-    this.set('year', HMDA.game.getRand(2003, 2013));
-    this.set('agency', HMDA.game.popRand(HMDA.game.get('agencies')));
+    //  This is a goodly range, but for game purposes, we'll make it a bit
+    //  harder
+    //this.set('income', HMDA.game.getRand(30000, 250000));
+    this.set('income', HMDA.game.getRand(30000, 175000));
+    this.set('year', HMDA.game.getRand(2006, 2011));
+    var agency = HMDA.game.popRand(HMDA.game.get('agencies'));
+    //  Don't show CFPB pre-20
+    if (this.get('year') > 2010 && agency == 'OTS') agency = 'CFPB';
+    if (this.get('year') < 2011 && agency == 'CFPB') agency = 'OTS';
+    this.set('agency', agency);
+
     this.set('talk', HMDA.game.popRand(HMDA.game.get('talk')));
     this.incrementTurn();
 
@@ -552,7 +560,9 @@ HMDA.views.board = Backbone.View.extend({
       for (var col = 0; col < row_width; col += 1) {
 
         var model = new HMDA.models.square({x:col, y:row}),
-            value = HMDA.game.getRand(50000, 500000);
+        //  This is a goodly range, but not very fun. Tweak it here
+        //    value = HMDA.game.getRand(75000, 275000);
+            value = HMDA.game.getRand(100000, 275000);
         model.set('type', 'home');
         model.set('value', value);
         model.set('text', HMDA.game.dollarize(value));
