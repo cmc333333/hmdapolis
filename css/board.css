@@ -251,6 +251,19 @@ button * {
 
 
 /*
+ * Icons
+ */
+
+.icon-holder {
+  font-size: 1.1em;
+  margin-right: 8px;  
+}
+.players .icon-holder {
+  margin-right: 0;  
+}
+
+
+/*
  * Overlay (not being used)
  */
 
@@ -283,11 +296,6 @@ button * {
 
 .footer {
   color: #282827;
-}
-
-.icon-holder {
-  font-size: 1.1em;
-  margin-right: 8px;  
 }
 
 /* Player console */
