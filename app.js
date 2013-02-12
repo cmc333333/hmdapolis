@@ -1,8 +1,17 @@
+/**
+ *  IT'S GO TIME
+ **/
+
 var HMDA = HMDA || {
   models: {},
   views: {},
   collections: {}
 };
+
+
+/**
+ *  Main data model, keeps track of game state
+ **/
 
 HMDA.models.game = Backbone.Model.extend({
 
@@ -10,34 +19,93 @@ HMDA.models.game = Backbone.Model.extend({
     turn: 0,
     numPlayers: 2,
     currentPlayer: 1,
-    agencies: ['CFPB', 'HUD', 'NCUA']
+    agencies: [],
+    cities: []
+  },
+
+  initialize: function() {
+
+    var self = this;
+
+    $.when(self.fetchAgencies(), self.fetchCities()).done(function(agencies, cities){
+
+      agencies = _.map(agencies[0], function(agency){
+        return agency.id;
+      });
+
+      cities = _.map(cities[0], function(city){
+        return city;
+      });
+
+      HMDA.game.set('agencies', agencies);
+
+      HMDA.game.set('cities', cities);
+
+      self.startGame();
+
+    });
   },
 
   newTurn: function() {
-    HMDA.players.add();
+
+    HMDA.persons.add();
+
     var currentPlayer = this.get('currentPlayer') + 1;
+
     if (currentPlayer > this.get('numPlayers')) {
       currentPlayer = 1;
     }
+
     this.set('currentPlayer', currentPlayer);
+
   },
 
   getRand: function (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   },
 
-  getAgency: function() {
-    var agencies = this.get('agencies');
-    return agencies[Math.floor(Math.random() * agencies.length)];
+  popRand: function(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
   },
 
   dollarize: function(n) {
     return '$' + n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  },
+
+  fetchAgencies: function() {
+    return $.getJSON('http://127.0.0.1:8000/json/agencies.json', function(data){
+    });
+  },
+
+  fetchCities: function() {
+    return $.getJSON('http://127.0.0.1:8000/json/cities.json', function(data){
+    });
+  },
+
+  startGame: function() {
+
+    HMDA.persons = new HMDA.collections.persons([new HMDA.models.person()]);
+
+    HMDA.gameView = new HMDA.views.game({model: HMDA.game});
+
+    HMDA.squares = new HMDA.collections.squares({model: new HMDA.models.square});
+
+    HMDA.board = new HMDA.views.board({collection: HMDA.squares});
+
+    HMDA.personsView = new HMDA.views.persons({collection: HMDA.persons});
+
+    $('#players').append(HMDA.personsView.render().el);
+
   }
 
 });
 
-HMDA.models.player = Backbone.Model.extend({
+
+/**
+ *  Person model stores info about persons
+ **/
+
+HMDA.models.person = Backbone.Model.extend({
 
   defaults: {
     score: 0,
@@ -49,7 +117,7 @@ HMDA.models.player = Backbone.Model.extend({
   initialize: function() {
     this.set('income', HMDA.game.dollarize(HMDA.game.getRand(20000, 130000)));
     this.set('year', HMDA.game.getRand(2003, 2013));
-    this.set('agency', HMDA.game.getAgency());
+    this.set('agency', HMDA.game.popRand(HMDA.game.get('agencies')));
     this.incrementTurn();
   },
 
@@ -60,9 +128,9 @@ HMDA.models.player = Backbone.Model.extend({
 
 });
 
-HMDA.collections.players = Backbone.Collection.extend({
+HMDA.collections.persons = Backbone.Collection.extend({
 
-  model: HMDA.models.player
+  model: HMDA.models.person
 
 });
 
@@ -84,7 +152,8 @@ HMDA.models.square = Backbone.Model.extend({
   },
 
   getStats: function() {
-    $.getJSON('http://192.168.53.16:8180?callback=?', function(data){
+    $.getJSON('http://192.168.53.16:8180?callback=?', function(data) {
+
     });
   }
 
@@ -114,7 +183,7 @@ HMDA.views.game = Backbone.View.extend({
   },
 
   setPlayer: function() {
-    console.log(this.model.get('currentPlayer'));
+    //console.log(this.model.get('currentPlayer'));
     this.$el.removeClass().addClass('s-player-' + this.model.get('currentPlayer'));
   },
 
@@ -124,7 +193,7 @@ HMDA.views.game = Backbone.View.extend({
 
 });
 
-HMDA.views.player = Backbone.View.extend({
+HMDA.views.person = Backbone.View.extend({
 
   tagName: 'div',
 
@@ -132,8 +201,8 @@ HMDA.views.player = Backbone.View.extend({
 
   },
 
-  template: function(player) {
-    return _.template($('#player-stats').html(), player);
+  template: function(person) {
+    return _.template($('#person-stats').html(), person);
   },
 
   initialize: function() {
@@ -150,8 +219,8 @@ HMDA.views.player = Backbone.View.extend({
 
 });
 
-// players collection views
-HMDA.views.players = Backbone.View.extend({
+// persons collection views
+HMDA.views.persons = Backbone.View.extend({
 
   el: '.profile',
 
@@ -160,13 +229,13 @@ HMDA.views.players = Backbone.View.extend({
   },
 
   addOne: function(model){
-    var playerView = new HMDA.views.player({model: model});
-    this.$el.html(playerView.render().el);
+    var personView = new HMDA.views.person({model: model});
+    this.$el.html(personView.render().el);
   },
 
   render: function() {
-    var lastPlayer = this.collection.at(this.collection.length - 1);
-    this.addOne(lastPlayer);
+    var lastPerson = this.collection.at(this.collection.length - 1);
+    this.addOne(lastPerson);
     //console.log(lastPlayer);
     return this;
   }
@@ -287,15 +356,6 @@ HMDA.views.board = Backbone.View.extend({
 $(function(){
 
   HMDA.game = new HMDA.models.game;
-  HMDA.gameView = new HMDA.views.game({model: HMDA.game});
-  HMDA.players = new HMDA.collections.players([
-    //new HMDA.models.player({name: 'Player 1', income: 120000, year: 2003, agency: 'HUD'}),
-    new HMDA.models.player({year: 2006, agency: 'CFPB'})
-  ]);
-  HMDA.squares = new HMDA.collections.squares({model: new HMDA.models.square});
-  HMDA.board = new HMDA.views.board({collection: HMDA.squares});
-  HMDA.playersView = new HMDA.views.players({collection: HMDA.players});
-
-  $('#players').append(HMDA.playersView.render().el);
+  
 
 });
