@@ -9,7 +9,7 @@ body {
   font-size: 100%;
   color: #FFFFFF;
   background: #5C5655;
-  background: white url(http://i396.photobucket.com/albums/pp48/mad626rad/crazybackground10.jpg) no-repeat top left;
+  background: white url(http://i396.photobucket.com/albums/pp48/mad626rad/crazybackground10.jpg) no-repeat bottom left;
   /*background: white url(http://i.imgur.com/723QP.jpg) no-repeat right center;*/
   /*background: white url(../img/bg.jpg) no-repeat top right;
   background-size: 2000px;*/
@@ -76,7 +76,7 @@ button * {
  */
 
 .console h1 {
-  margin: 0 0 20px;
+  margin: 30px 0 6px;
   font-size: 75px;
   line-height: 1;
   text-align: center;
@@ -86,7 +86,7 @@ button * {
   font-style: italic;
 }
 .console h1 img {
-  width: 250px;
+  width: 300px;
 }
 
 
@@ -318,20 +318,20 @@ button * {
   color: #43AB7E;
 }
 .hexagons li > span {
-  background: #E8E8E8;
+  background: rgba(232,232,232,.9);
 }
 .hexagons li:before {
-  border-bottom-color: #E8E8E8;
+  border-bottom-color: rgba(232,232,232,.9);
 }
 .hexagons li:after {
-  border-top-color: #E8E8E8;
+  border-top-color: rgba(232,232,232,.9);
 }
 
 /* City tile */
 .hexagons .city > span {
   font-size: 11px;
   font-weight: 300;
-  line-height: 2;
+  line-height: 1.9;
   color: black;
   background: transparent;
 }
@@ -341,8 +341,23 @@ button * {
 }
 .hexagons .city {
   color: white;
-  background: transparent url(../img/nyc_illustration.png) no-repeat left top;
+  background: transparent url(../img/nyc.png) no-repeat left top;
   background-size: 104px;
+}
+.hexagons .city-austin {
+  background-image: url(../img/austin.png);
+}
+.hexagons .city-baltimore {
+  background-image: url(../img/baltimore.png);
+}
+.hexagons .city-la {
+  background-image: url(../img/la.png);
+}
+.hexagons .city-nyc {
+  background-image: url(../img/nyc.png);
+}
+.hexagons .city-reno {
+  background-image: url(../img/reno.png);
 }
 /*.hexagons .city > span {
   background: #5C5655;
