@@ -75,6 +75,7 @@ HMDA.models.game = Backbone.Model.extend({
   fetchAgencies: function() {
     return $.getJSON('http://127.0.0.1:8000/json/agencies.json', function(data){
     });
+
   },
 
   fetchCities: function() {
@@ -85,15 +86,10 @@ HMDA.models.game = Backbone.Model.extend({
   startGame: function() {
 
     HMDA.persons = new HMDA.collections.persons([new HMDA.models.person()]);
-
     HMDA.gameView = new HMDA.views.game({model: HMDA.game});
-
     HMDA.squares = new HMDA.collections.squares({model: new HMDA.models.square});
-
     HMDA.board = new HMDA.views.board({collection: HMDA.squares});
-
     HMDA.personsView = new HMDA.views.persons({collection: HMDA.persons});
-
     $('#players').append(HMDA.personsView.render().el);
 
   }
@@ -102,7 +98,8 @@ HMDA.models.game = Backbone.Model.extend({
 
 
 /**
- *  Person model stores info about persons
+ *  Person model stores info about an individual person.
+ *  These are stored in the persons collection.
  **/
 
 HMDA.models.person = Backbone.Model.extend({
@@ -115,24 +112,38 @@ HMDA.models.person = Backbone.Model.extend({
   },
 
   initialize: function() {
+
     this.set('income', HMDA.game.dollarize(HMDA.game.getRand(20000, 130000)));
     this.set('year', HMDA.game.getRand(2003, 2013));
     this.set('agency', HMDA.game.popRand(HMDA.game.get('agencies')));
     this.incrementTurn();
+
   },
 
   incrementTurn: function() {
+
     var turn = HMDA.game.get('turn');
     HMDA.game.set('turn', turn + 1, {silent: true});
+
   }
 
 });
+
+
+/**
+ *  Collection of person models
+ **/
 
 HMDA.collections.persons = Backbone.Collection.extend({
 
   model: HMDA.models.person
 
 });
+
+
+/**
+ *  A square is an individual tile on the game board
+ **/
 
 HMDA.models.square = Backbone.Model.extend({
 
@@ -145,17 +156,23 @@ HMDA.models.square = Backbone.Model.extend({
   },
 
   getCity: function () {
+
     var cities = HMDA.game.get('cities');
     return cities.splice(Math.floor(Math.random() * cities.length), 1);
+
   },
 
   getStats: function() {
     $.getJSON('http://192.168.53.16:8180?callback=?', function(data) {
-
     });
   }
 
 });
+
+
+/**
+ *  Collection of squares
+ **/
 
 HMDA.collections.squares = Backbone.Collection.extend({
 
@@ -163,6 +180,11 @@ HMDA.collections.squares = Backbone.Collection.extend({
   height: 7
 
 });
+
+
+/**
+ *  View of the global game model
+ **/
 
 HMDA.views.game = Backbone.View.extend({
 
@@ -181,7 +203,6 @@ HMDA.views.game = Backbone.View.extend({
   },
 
   setPlayer: function() {
-    //console.log(this.model.get('currentPlayer'));
     this.$el.removeClass().addClass('s-player-' + this.model.get('currentPlayer'));
   },
 
@@ -190,6 +211,11 @@ HMDA.views.game = Backbone.View.extend({
   }
 
 });
+
+
+/**
+ *  At this point this just populates the left sidebar with person stats
+ **/
 
 HMDA.views.person = Backbone.View.extend({
 
@@ -204,20 +230,27 @@ HMDA.views.person = Backbone.View.extend({
   },
 
   initialize: function() {
-    //this.render();
+  
   },
 
   render: function() {
+
     var self = this;
     this.$el.fadeOut(100, function() {
       $(this).html(self.template(self.model.toJSON())).fadeIn(100);
     });
     return this;
+
   }
 
 });
 
-// persons collection views
+
+/**
+ *  Whenever a person is added to this collection, render the person view of the person
+ *  at the end of this collection
+ **/
+
 HMDA.views.persons = Backbone.View.extend({
 
   el: '.profile',
@@ -227,18 +260,26 @@ HMDA.views.persons = Backbone.View.extend({
   },
 
   addOne: function(model){
+
     var personView = new HMDA.views.person({model: model});
     this.$el.html(personView.render().el);
+
   },
 
   render: function() {
+
     var lastPerson = this.collection.at(this.collection.length - 1);
     this.addOne(lastPerson);
-    //console.log(lastPlayer);
     return this;
+
   }
 
 });
+
+
+/**
+ *  Renders individual tiles, re-renders whenever model changes
+ **/
 
 HMDA.views.square = Backbone.View.extend({
 
@@ -296,6 +337,11 @@ HMDA.views.square = Backbone.View.extend({
 
 });
 
+
+/**
+ *  Board view renders a collection of squares
+ **/
+
 HMDA.views.board = Backbone.View.extend({
 
   el: '#board',
@@ -305,17 +351,25 @@ HMDA.views.board = Backbone.View.extend({
   },
 
   initialize: function() {
+
     _.bindAll(this, 'render');
     this.populate();
     this.render();
+
   },
 
   populate: function() {
+
     this.matrix = new Array();
+
     for (var row = 0; row < this.collection.height; row += 1) {
+
       this.matrix[row] = Array();
+
       var row_width = this.collection.width;
+
       for (var col = 0; col < row_width; col += 1) {
+
         var model = new HMDA.models.square({x:col, y:row});
         model.set('type', 'home');
         model.set('value', HMDA.game.dollarize(HMDA.game.getRand(
@@ -323,37 +377,56 @@ HMDA.views.board = Backbone.View.extend({
         this.matrix[row][col] = new HMDA.views.square({
           model: model
         });
+
       }
+
     }
+
     //  Now, flip some tiles to cities
     for (var row = 0; row < this.matrix.length; row += 1) {
+
       for (var col = 0; col < this.matrix[row].length; col += 1) {
+
         var model = this.matrix[row][col].model;
+
         if (!HMDA.game.getRand(0, 8)) {
           model.set('type', 'city');
           model.set('value', model.getCity());
         }
+
       }
+
     }
+
   },
 
   render: function() {
+
     for (var row = 0; row < this.matrix.length; row += 1) {
+
       var row_ul = document.createElement('ul');
       var stripe = (row % 2 === 0) ? 'odd': 'even';
       row_ul.className = 'row ' + stripe;
+
       for (var col = 0; col < this.matrix[row].length; col += 1) {
         row_ul.appendChild(this.matrix[row][col].el);
       }
+
       this.$el.append(row_ul);
+
     }
+
   }
 
 });
 
+
+/**
+ *  When the DOM loads, do this stuff
+ **/
+
 $(function(){
 
   HMDA.game = new HMDA.models.game;
-  
 
 });
