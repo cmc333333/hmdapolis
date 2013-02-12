@@ -157,7 +157,7 @@ button * {
   overflow: hidden;
   border-left: 4px dotted transparent;
   border-right: 4px dotted transparent;
-  border-bottom: 4px solid rgba(255,255,255,.1);
+  border-bottom: 4px solid #3A5969;
 }
 
 
@@ -305,6 +305,19 @@ button * {
 .players .player-2 {
   background: #FF5E2C;
 }
+.profile .talk {
+  background: #3A5969;
+}
+.profile .talk:before {
+  border-bottom-color: #3A5969;
+}
+.s-player-2 .profile .talk {
+  background: #FF6C36;
+}
+.s-player-2 .profile .talk:before {
+  border-bottom-color: #FF6C36;
+}
+
 
 /* Messages */
 .message.message-denied {
@@ -483,9 +496,12 @@ button * {
 .s-winner-player-2 .players .player-1 .icon-holder:before {
   content: "";
 }
+.players > li {
+  -webkit-transition: .3s all ease-out;
+}
 .s-winner-player-1 .players .player-2,
 .s-winner-player-2 .players .player-1 {
-  opacity: 0.7;
+  -webkit-transform: scale3d(.85,.85,1);
 }
 
 /* Score */
