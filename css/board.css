@@ -110,6 +110,12 @@ button * {
   width: 109px;
   margin-right: 1px
 }
+.score {
+  display: block;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #FFFFFF;
+}
 
 
 /*
@@ -456,9 +462,22 @@ button * {
 .s-winner-player-2 .player-2 .icon-holder:before {
   content: "\f091";
 }
+.s-winner-player-1 .players .player-2 .icon-holder:before,
+.s-winner-player-2 .players .player-1 .icon-holder:before {
+  content: "";
+}
 .s-winner-player-1 .players .player-2,
 .s-winner-player-2 .players .player-1 {
+  opacity: 0.7;
+}
+
+/* Score */
+.score {
   display: none;
+}
+[class^="s-winner-"] .score,
+[class*="s-winner-"] .score {
+  display: block;
 }
 
 /* Profile */
