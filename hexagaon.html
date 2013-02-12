@@ -18,7 +18,7 @@
       
       <div class="console">
         
-        <h1>HMDA<span>polis</span></h1>
+        <h1><img src="img/hmdapolis_logo.png" alt="HMDApolis"><!-- HMDA<span>polis</span> --></h1>
         
         <ul class="console_block players">
           <li class="player-1">Player 1 <i class="icon-holder"></i></li>
@@ -34,13 +34,6 @@
           </ul>
         </div>
         
-        <!-- [todo] make reason why accepted/declined -->
-        
-        <!-- Messages -->
-        <div class="console_block message message-waiting"><i class="icon-holder icon-spin"></i> Please wait...</div>
-        <div class="console_block message message-denied"><i class="icon-holder"></i> Denied!</div>
-        <div class="console_block message message-approved"><i class="icon-holder"></i> Approved!</div>
-
       </div>
 
       <div id="board" class="hexagons">
@@ -108,13 +101,84 @@
           <li><span>$127,000</span></li>
         </ul>
       </div>
-
-      <!-- <div id="overlay" class="s-active">
-        <div class="inner console_block message s-denied">
-          <i class="icon-holder"></i> Denied!
-        </div>
-      </div> -->
+    
+      <div class="footer">Footer info</div>
 
     </div>
+
+    <div id="overlay" class="s-active">
+      <div class="inner">
+        <div class="console_block message message-waiting"><i class="icon-holder icon-spin"></i> Crunching HMDA data...</div>
+        <div class="console_block message message-stats">
+          <div id="comparison-chart"></div>
+          <p>When comparing your current criteria to past HMDA data <strong>x% of people were approved</strong> and <strong>y% were denied</strong>.</p>
+        </div>
+        <div class="console_block message message-denied">You were Denied! <i class="icon-holder"></i></div>
+        <div class="console_block message message-approved">You were Approved! <i class="icon-holder"></i></div>
+        <button class="console_block message message-continue" type="button">Continue <i class="icon-holder"></i></button>
+
+      </div>
+    </div>
+
+    <script src="js/jquery-1.8.2.min.js"></script>
+    <script src="js/highcharts.js"></script>
+    <script>
+      $(function () {
+          var chart;
+          $(document).ready(function() {
+              chart = new Highcharts.Chart({
+                  chart: {
+                      renderTo: 'comparison-chart',
+                      backgroundColor: 'rgba(255,255,255,0)',
+                      plotBackgroundColor: 'rgba(255,255,255,0)',
+                      plotBorderWidth: null,
+                      plotShadow: false,
+                      spacingTop: 0,
+                      spacingRight: 0,
+                      spacingBottom: 0,
+                      spacingLeft: 0
+                  },
+                  credits: {
+                      enabled: false
+                  },
+                  title: {
+                      text: null
+                  },
+                  tooltip: {
+                    enabled: false
+                  },
+                  plotOptions: {
+                      pie: {
+                          size: '90%',
+                          shadow: false,
+                          borderWidth: '3',
+                          dataLabels: {
+                              enabled: false
+                          },
+                          states: {
+                            hover: {
+                              enabled: false
+                            }
+                          }
+                      }
+                  },
+                  series: [{
+                      type: 'pie',
+                      name: 'Name example',
+                      data: [
+                          ['Approved',   65.0],
+                          ['Denied',     35.0]
+                      ]
+                  }],
+                  colors: [
+                    '#43AB7E',
+                    '#D44655'
+                  ]
+              });
+          });
+          
+      });
+    </script>
+
   </body>
 </html>

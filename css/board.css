@@ -4,13 +4,16 @@
 
 body {
   margin: 0;
-  padding: 45px 20px;
+  padding: 60px 60px;
   font-family: 'Oswald', arial, veradana, sans-serif;
   font-size: 100%;
   color: #FFFFFF;
   background: #5C5655;
   background: white url(http://i396.photobucket.com/albums/pp48/mad626rad/crazybackground10.jpg) no-repeat top left;
-  overflow: hidden;
+  /*background: white url(http://i.imgur.com/723QP.jpg) no-repeat right center;*/
+  /*background: white url(../img/bg.jpg) no-repeat top right;
+  background-size: 2000px;*/
+  /*overflow: hidden;*/
 }
 p, h1 {
   margin: 0;
@@ -20,32 +23,50 @@ ul, li {
   padding: 0;
   list-style-type: none;
 }
-
+strong {
+  font-weight: 400;
+}
+button {
+  border: 0;
+  cursor: pointer;
+  color: #FFFFFF;
+  font-weight: 400;
+  font-family: 'Oswald', arial, veradana, sans-serif;
+}
+button * {
+  cursor: pointer;
+}
 
 /*
  * Layout
  */
 
 .wrapper {
-  width: 1330px;
+  width: 1170px;
   margin: 0 auto;
 }
 .console {
-  width: 500px;
-  margin-right: 20px;
+  width: 300px;
+  margin-right: 60px;
   float: left;
-  font-size: 32px;
 }
 .console_block {
   display: block;
   margin: 0 0 1px;
   padding: 20px;
   background: #5C5655;
+  font-size: 1.375em; /* 22/16 */
 }
 .hexagons {
   display: block;
   width: 810px;
   float: left;
+}
+.footer {
+  float: left;
+  padding: 20px;
+  font-size: 12px;
+  font-weight: 300;
 }
 
 
@@ -57,10 +78,14 @@ ul, li {
   margin: 0 0 20px;
   font-size: 75px;
   line-height: 1;
+  text-align: center;
 }
 .console h1 span {
   font-weight: 300;
   font-style: italic;
+}
+.console h1 img {
+  width: 250px;
 }
 
 
@@ -75,13 +100,13 @@ ul, li {
 }
 .players > li {
   display: block;
-  width: 210px;
+  width: 110px;
   padding: 20px;
   float: left;
   background: #5C5655;
 }
 .players > li:first-child {
-  width: 209px;
+  width: 109px;
   margin-right: 1px
 }
 
@@ -90,6 +115,9 @@ ul, li {
  * Profile
  */
 
+.profile {
+  padding: 20px 0 20px 20px;
+}
 .profile li {
   display: block;
   margin-right: 10px;
@@ -99,15 +127,19 @@ ul, li {
   margin-right: 4px;
   font-weight: 300;
 }
+.profile .icon-user {
+  width: 1em;
+  margin-left: -.1em;
+}
 .profile .talk {
   position: relative;
   font-size: 12px;
   font-weight: 300;
   text-align: center;
-  width: 80px;
-  margin: 0 10px 10px;
+  width: 6em;
+  margin: 0 0 0 -3em;
   padding: 10px;
-  background: rgba(255,255,255,.1);
+  background: #3A5969;
   border-radius: 8px;
 }
 .profile .talk:before {
@@ -115,7 +147,7 @@ ul, li {
   display: block;
   position: absolute;
   top: -4px;
-  left: 33%;
+  left: 66%;
   width: 0;
   height: 0;
   overflow: hidden;
@@ -130,7 +162,29 @@ ul, li {
  */
 
 .message {
+  position: relative;
   font-size: 1.5em;
+}
+.message-stats p {
+  font-size: 24px;
+  font-weight: 300;
+}
+.message-stats strong {
+  font-style: italic;
+}
+#comparison-chart {
+  width: 120px;
+  height: 120px;
+  float: right;
+  margin: 0 -50px 0 10px;
+}
+.message-continue {
+  float: right;
+  font-size: 0.8em; /* 20/24 */
+  -webkit-transition: .2s -webkit-transform ease;
+}
+.message-continue:hover {
+  -webkit-transform: scale3d(1.1,1.1,1);
 }
 
 
@@ -194,6 +248,31 @@ ul, li {
 
 
 /*
+ * Overlay (not being used)
+ */
+
+#overlay {
+  background: rgba(0,0,0,0.5);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  font-size: 1.375em;
+}
+#overlay .inner {
+  width: 500px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -4em 0 0 -250px;
+  padding: 1px 1px 0;
+  background: rgba(255,255,255,.75);
+  box-shadow: 0 0 16px rgba(0,0,0,1)
+}
+
+
+/*
  * Colors / Decorations / Icons / Backgrounds
  */
 
@@ -226,6 +305,12 @@ ul, li {
 .message.message-waiting .icon-holder:before {
   content: "\f110";
 }
+.message.message-stats .icon-holder:before {
+  content: "\f080";
+}
+.message.message-continue .icon-holder:before {
+  content: "\f061";
+}
 
 /* Default tile */
 .hexagons {
@@ -243,9 +328,10 @@ ul, li {
 
 /* City tile */
 .hexagons .city > span {
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 300;
-  line-height: 94px;
+  line-height: 2;
+  color: black;
   background: transparent;
 }
 .hexagons .city:before,
@@ -254,7 +340,7 @@ ul, li {
 }
 .hexagons .city {
   color: white;
-  background: transparent url(../img/skyline.png) no-repeat left top;
+  background: transparent url(../img/nyc_illustration.png) no-repeat left top;
   background-size: 104px;
 }
 /*.hexagons .city > span {
@@ -351,11 +437,15 @@ ul, li {
 
 /* Profile */
 .s-player-1 .profile,
-.s-player-1 .message-waiting {
+.s-player-1 .message-waiting,
+.s-player-1 .message-stats,
+.s-player-1 .message-continue {
   background: #264859;
 }
 .s-player-2 .profile,
-.s-player-2 .message-waiting  {
+.s-player-2 .message-waiting,
+.s-player-2 .message-stats,
+.s-player-2 .message-continue {
   background: #FF5E2C;
 }
 .s-winner-player-1 .profile,
@@ -369,7 +459,11 @@ ul, li {
 }
 .s-waiting .message.message-waiting,
 .s-denied .message.message-denied,
-.s-approved .message.message-approved {
+.s-approved .message.message-approved,
+.s-denied .message.message-stats,
+.s-approved .message.message-stats,
+.s-denied .message.message-continue,
+.s-approved .message.message-continue {
   display: block;
 }
 
@@ -391,30 +485,19 @@ ul, li {
     }
 }
 
-
-/*
- * Overlay (not being used)
- */
-
+/* Overlay */
 #overlay {
-  background: rgba(0,0,0,0.8);
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
   display: none;
 }
-#overlay.s-active {
+.s-waiting #overlay,
+.s-denied #overlay,
+.s-approved #overlay {
   display: block;
 }
-#overlay .inner {
-  width: 300px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin: -60px 0 0 -150px;
-  font-size: 32px;
+.s-waiting #overlay .inner,
+.s-denied #overlay .inner,
+.s-approved #overlay .inner {
+  margin-top: -8em;
 }
 
 
@@ -432,6 +515,8 @@ ul, li {
 
 .wrapper:before,
 .wrapper:after,
+.inner:before,
+.inner:after,
 .row:before,
 .row:after,
 .console_block:before,
@@ -441,6 +526,7 @@ ul, li {
 }
 
 .wrapper:after,
+.inner:after,
 .row:after,
 .console_block:after {
     clear: both;
@@ -452,6 +538,7 @@ ul, li {
  */
 
 .wrapper,
+.inner,
 .row,
 .console_block {
     *zoom: 1;
