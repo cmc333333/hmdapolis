@@ -1,5 +1,21 @@
 /**
- *  IT'S GO TIME
+ *  DEBUGGING, BRO.
+ **/
+
+var localConfig = {
+  agencies: "http://127.0.0.1:8000/json/agencies.json",
+  cities: "http://127.0.0.1:8000/json/cities.json",
+  stats: "http://127.0.0.1:8000/json/apply.json?"
+}
+var liveConfig = {
+  agencies: "http://127.0.0.1:8180/agency/?callback=?",
+  cities: "http://127.0.0.1:8180/city/?callback=?",
+  stats: "http://127.0.0.1:8180/apply/?callback=?&"
+}
+
+
+/**
+ *  IT'S GO TIME, GOGOGOGOGO
  **/
 
 var HMDA = HMDA || {
@@ -206,7 +222,9 @@ HMDA.views.game = Backbone.View.extend({
 
   endGame: function() {
 
-    this.$el.addClass('s-winner-player-' + this.model.get('currentPlayer'));
+    var winner = _.indexOf(HMDA.board.points(), _.max(HMDA.board.points())) + 1;
+
+    this.$el.addClass('s-winner-player-' + winner);
 
     _.each(HMDA.board.points(), function(el, i) {
       $('#players .player-' + (i + 1) + ' .score').html(HMDA.board.points()[i] + ' pts');
