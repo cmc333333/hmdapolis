@@ -73,13 +73,13 @@ HMDA.models.game = Backbone.Model.extend({
   },
 
   fetchAgencies: function() {
-    return $.getJSON('http://127.0.0.1:8000/json/agencies.json', function(data){
+    return $.getJSON('http://127.0.0.1:8181/json/agencies.json', function(data){
     });
 
   },
 
   fetchCities: function() {
-    return $.getJSON('http://127.0.0.1:8000/json/cities.json', function(data){
+    return $.getJSON('http://127.0.0.1:8181/json/cities.json', function(data){
     });
   },
 
@@ -326,8 +326,8 @@ HMDA.views.square = Backbone.View.extend({
     var x = this.model.get('x'),
         y = this.model.get('y');
 
-    _.each(this.getNeighbors(x, y), function(item){
-      item.addClass('neighbor');
+    _.each(HMDA.board.getNeighbors(y, x), function(item){
+      $(item.$el).addClass('neighbor');
     });
 
   },
@@ -344,8 +344,6 @@ HMDA.views.square = Backbone.View.extend({
     }
 
     this.$el.html('<span>' + this.model.get('value') + '</span>').attr('data-x', this.model.get('x')).attr('data-y', this.model.get('y'));
-
-    console.log(this.model.toJSON());
 
     return this;
 
@@ -374,8 +372,36 @@ HMDA.views.board = Backbone.View.extend({
 
   },
 
-  populate: function() {
 
+  getNeighbors: function(row, col) {
+    //  Odd rows are off kilter. Account for that
+    var odd_offset = row % 2 * -1;
+    var pairs = [[-1, odd_offset], [-1, odd_offset + 1],  
+                [0, -1], [0, 1],
+                [1, odd_offset], [1,odd_offset + 1]];
+    var neighbors = Array();
+    var matrix = this.matrix;
+    _.each(pairs, function(pair) {
+        var mod_row = row + pair[0];
+        var mod_col = col + pair[1];
+        if (matrix[mod_row] && matrix[mod_row][mod_col]) {
+            neighbors.push(matrix[mod_row][mod_col]);
+        }
+    });
+    return neighbors;
+  },
+
+  nearCity: function(row, col) {
+    var neighbors = this.getNeighbors(row, col);
+    var hasCity = false;
+    _.each(neighbors, function(neighbor) {
+      if (neighbor.model.get('type') == 'city')
+        hasCity = true;
+    });
+    return hasCity;
+  },
+
+  populate: function() {
     this.matrix = [];
 
     for (var row = 0; row < this.collection.height; row += 1) {
@@ -414,7 +440,23 @@ HMDA.views.board = Backbone.View.extend({
       }
 
     }
-
+    //  Check every tile is playable
+    /*
+    for (var row = 0; row < this.matrix.length; row += 1) {
+      for (var col = 0; col < this.matrix[row].length; col += 1) {
+        var model = this.matrix[row][col].model;
+        if (model.get('type') == 'home' && !this.nearCity(row, col)) {
+          if (!model.getRand(0, 4)) {
+            model.set('type', 'city');
+            model.set('value', model.getCity());
+          } else {
+            model.set('type', null);
+            model.set('value', '');
+          }
+        }
+      }
+    }
+    */
   },
 
   render: function() {
