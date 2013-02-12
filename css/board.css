@@ -349,7 +349,7 @@ button * {
 .hexagons .city > span {
   font-size: 11px;
   font-weight: 300;
-  line-height: 1.9;
+  line-height: 2;
   color: black;
   background: transparent;
 }
@@ -362,6 +362,7 @@ button * {
   text-shadow: none;
   background: transparent url(../img/nyc.png) no-repeat left top;
   background-size: 104px;
+  background-position-y: 1px;
 }
 .hexagons .city-austin {
   background-image: url(../img/austin.png);
