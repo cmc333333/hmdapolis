@@ -236,9 +236,13 @@ HMDA.views.person = Backbone.View.extend({
   render: function() {
 
     var self = this;
-    this.$el.fadeOut(100, function() {
-      $(this).html(self.template(self.model.toJSON())).fadeIn(100);
+
+    // there's a chrome bug that doesn't erase the previous node before redrawing
+    // so we fadeout over 1 ms with a callback
+    this.$el.fadeOut(1, function() {
+      $(this).html(self.template(self.model.toJSON())).fadeIn(1);
     });
+    
     return this;
 
   }
