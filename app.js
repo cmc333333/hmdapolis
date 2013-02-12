@@ -440,7 +440,7 @@ HMDA.views.square = Backbone.View.extend({
 
   playSquare: function() {
 
-    if (this.$el.hasClass('null')) {
+    if (this.$el.is('.null, .city')) {
       return;
     }
 
