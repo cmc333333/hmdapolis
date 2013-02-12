@@ -360,6 +360,18 @@ button * {
   border-top-color: #D0D0CE;
 }
 
+/* Failed title */
+.hexagons li.fail > span {
+  background: #D44655;
+  color: #000;
+}
+.hexagons li.fail:before {
+  border-bottom-color: #D44655;
+}
+.hexagons li.fail:after {
+  border-top-color: #D44655;
+}
+
 /* City tile */
 .hexagons .city > span {
   font-size: 11px;

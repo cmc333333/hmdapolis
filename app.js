@@ -450,8 +450,23 @@ HMDA.views.square = Backbone.View.extend({
     var x = this.model.get('x'),
         y = this.model.get('y');
 
-    _.each(HMDA.board.getNeighbors(y, x), function(item){
-      $(item.$el).addClass('neighbor');
+    $.when(this.model.getStats()).done(function(stats){
+
+      var success = (stats.accepted > stats.rejected) ? true : false,
+          acceptedPercentage = Math.floor(100 * stats.accepted / 
+            (stats.accepted + stats.rejected)),
+          rejectedPercentage = 100 - acceptedPercentage;
+
+      HMDA.game.trigger('stop-loading', {success: success, accepted: acceptedPercentage, rejected: rejectedPercentage});
+
+      if (success) {
+        self.model.set('owner', HMDA.game.get('currentPlayer'), {silent: true});
+        self.$el.addClass('player-' + HMDA.game.get('currentPlayer'));
+      } else {
+        self.model.set('owner', null);
+        self.$el.addClass('null fail');
+      }
+      
     });
 
   },
