@@ -425,14 +425,21 @@ HMDA.views.board = Backbone.View.extend({
     for (var row = 0; row < this.matrix.length; row += 1) {
       for (var col = 0; col < this.matrix[row].length; col += 1) {
         var model = this.matrix[row][col].model;
-        if (model.get('type') == 'home' && !this.nearCity(row, col)) {
-          if (!HMDA.game.getRand(0, 4)) {
+        if (model.get('type') == 'home' && !this.nearCity(row, col)
+                && !HMDA.game.getRand(0,4)) {
             model.set('type', 'city');
-            model.set('value', model.getCity());
-          } else {
+            model.set('text', model.getCity());
+        }
+      }
+    }
+    //  Final pass through, nulling out any locations still far from
+    //  cities
+    for (var row = 0; row < this.matrix.length; row += 1) {
+      for (var col = 0; col < this.matrix[row].length; col += 1) {
+        var model = this.matrix[row][col].model;
+        if (model.get('type') == 'home' && !this.nearCity(row, col)){
             model.set('type', null);
-            model.set('value', '');
-          }
+            model.set('text', '');
         }
       }
     }
