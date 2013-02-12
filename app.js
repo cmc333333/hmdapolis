@@ -150,6 +150,7 @@ HMDA.models.square = Backbone.Model.extend({
   defaults: {
     type: 'home',
     value: '',
+    dollarAmount: 0,
     owner: undefined,
     x: 1,
     y: 1
@@ -242,7 +243,7 @@ HMDA.views.person = Backbone.View.extend({
     this.$el.fadeOut(1, function() {
       $(this).html(self.template(self.model.toJSON())).fadeIn(1);
     });
-    
+
     return this;
 
   }
@@ -294,12 +295,15 @@ HMDA.views.square = Backbone.View.extend({
   },
 
   initialize: function() {
+
     this.model.on('change', this.render, this);
     _.bindAll(this, 'render', 'playSquare');
     this.render();
+
   },
 
   getNeighbors: function(x, y) {
+
     //  Odd rows are off kilter. Account for that
     var odd_offset = y % 2 * -1;
     var pairs = [[-1, odd_offset], [-1, odd_offset + 1],  
@@ -314,9 +318,11 @@ HMDA.views.square = Backbone.View.extend({
         }
     });
     return neighbors;
+
   },
 
   playSquare: function() {
+
     var x = this.model.get('x'),
         y = this.model.get('y');
 
@@ -327,6 +333,7 @@ HMDA.views.square = Backbone.View.extend({
   },
 
   render: function() {
+
     if (this.model.get('owner')) {
       this.$el.addClass('chosen');
       this.model.set('value', this.model.get('value') + '<br />' + this.model.get('owner'));
@@ -335,8 +342,13 @@ HMDA.views.square = Backbone.View.extend({
     } else if (this.model.get('type') === null) {
       this.$el.addClass('null');
     }
+
     this.$el.html('<span>' + this.model.get('value') + '</span>').attr('data-x', this.model.get('x')).attr('data-y', this.model.get('y'));
+
+    console.log(this.model.toJSON());
+
     return this;
+
   }
 
 });
@@ -364,7 +376,7 @@ HMDA.views.board = Backbone.View.extend({
 
   populate: function() {
 
-    this.matrix = new Array();
+    this.matrix = [];
 
     for (var row = 0; row < this.collection.height; row += 1) {
 
@@ -374,10 +386,11 @@ HMDA.views.board = Backbone.View.extend({
 
       for (var col = 0; col < row_width; col += 1) {
 
-        var model = new HMDA.models.square({x:col, y:row});
+        var model = new HMDA.models.square({x:col, y:row}),
+            dollarAmount = HMDA.game.getRand(50000, 500000);
         model.set('type', 'home');
-        model.set('value', HMDA.game.dollarize(HMDA.game.getRand(
-                        50000, 500000)));
+        model.set('dollarAmount', dollarAmount);
+        model.set('value', HMDA.game.dollarize(dollarAmount));
         this.matrix[row][col] = new HMDA.views.square({
           model: model
         });
