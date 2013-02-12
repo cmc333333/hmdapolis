@@ -144,11 +144,9 @@ HMDA.models.square = Backbone.Model.extend({
     y: 1
   },
 
-  cities: ['Los Angeles', 'Chicago', 'Dallas', 'NYC', 'Spokane', 'Baltimore', 'Albany', 
-          'Austin', 'New Orleans', 'Grand Rapids', 'San Francisco', 'Boston', 'Seattle', 'Atlanta'],
-
   getCity: function () {
-    return this.cities.splice(Math.floor(Math.random() * this.cities.length), 1);
+    var cities = HMDA.game.get('cities');
+    return cities.splice(Math.floor(Math.random() * cities.length), 1);
   },
 
   getStats: function() {
