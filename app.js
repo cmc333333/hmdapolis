@@ -36,7 +36,9 @@ HMDA.models.game = Backbone.Model.extend({
     numPlayers: 2,
     currentPlayer: 1,
     agencies: [],
-    cities: []
+    cities: [],
+    talk: ["Choose responsibly!", "Dallas looks nice this time of year.", "It's a buyer's market!", "I ain't afraid of no foreclosure."],
+    cityMap: {}
   },
 
   initialize: function() {
@@ -124,7 +126,8 @@ HMDA.models.person = Backbone.Model.extend({
     score: 0,
     income: 0,
     year: 0,
-    agency: ''
+    agency: '',
+    talk: 'Choose responsibly!'
   },
 
   initialize: function() {
@@ -132,6 +135,7 @@ HMDA.models.person = Backbone.Model.extend({
     this.set('income', HMDA.game.dollarize(HMDA.game.getRand(20000, 130000)));
     this.set('year', HMDA.game.getRand(2003, 2013));
     this.set('agency', HMDA.game.popRand(HMDA.game.get('agencies')));
+    this.set('talk', HMDA.game.popRand(HMDA.game.get('talk')));
     this.incrementTurn();
 
   },
