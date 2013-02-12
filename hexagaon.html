@@ -13,7 +13,7 @@
     s-winner-player-1
     s-winner-player-2
   -->
-  <body class="s-player-1">
+  <body class="s-player-1 s-denied">
     <div class="wrapper">
       
       <div class="console">
@@ -113,9 +113,9 @@
           <div id="comparison-chart"></div>
           <p>When comparing your current criteria to past HMDA data <strong>x% of people were approved</strong> and <strong>y% were denied</strong>.</p>
         </div>
-        <div class="console_block message message-denied">You were Denied! <i class="icon-holder"></i></div>
-        <div class="console_block message message-approved">You were Approved! <i class="icon-holder"></i></div>
-        <button class="console_block message message-continue" type="button">Continue <i class="icon-holder"></i></button>
+        <div class="console_block message message-denied"><i class="icon-holder"></i> You were Denied! <button class="console_block message message-continue" type="button">Continue <i class="icon-holder"></i></button></div>
+        <div class="console_block message message-approved"><i class="icon-holder"></i> You were Approved! <button class="console_block message message-continue" type="button">Continue <i class="icon-holder"></i></button></div>
+
 
       </div>
     </div>
@@ -125,8 +125,7 @@
     <script>
       $(function () {
           var chart;
-          $(document).ready(function() {
-              chart = new Highcharts.Chart({
+          var chartSettings = {
                   chart: {
                       renderTo: 'comparison-chart',
                       backgroundColor: 'rgba(255,255,255,0)',
@@ -174,10 +173,18 @@
                     '#43AB7E',
                     '#D44655'
                   ]
-              });
+          };
+          $(document).ready(function() {
+            chart = new Highcharts.Chart(chartSettings);
           });
-          
-      });
+          $('body').click(function(){
+            chartSettings.series[0].data = [
+                    ['Approved',   50.0],
+                    ['Denied',     50.0]
+            ];
+            chart = new Highcharts.Chart(chartSettings);
+          });
+        });
     </script>
 
   </body>

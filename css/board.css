@@ -37,6 +37,7 @@ button * {
   cursor: pointer;
 }
 
+
 /*
  * Layout
  */
@@ -179,12 +180,11 @@ button * {
   margin: 0 -50px 0 10px;
 }
 .message-continue {
+  margin-bottom: 0;
+  padding: .75em;
   float: right;
-  font-size: 0.8em; /* 20/24 */
-  -webkit-transition: .2s -webkit-transform ease;
-}
-.message-continue:hover {
-  -webkit-transform: scale3d(1.1,1.1,1);
+  font-size: 0.5em; /* 20/24 */
+  border: 1px solid rgba(255,255,255,1);
 }
 
 
@@ -209,7 +209,6 @@ button * {
   margin-top: -26px;
   margin-right: 4px;
   height: 120px;
-  -webkit-transition: .2s all ease;
 }
 .hexagons .row:first-child > li {
   margin-top: 0;
@@ -259,6 +258,8 @@ button * {
   bottom: 0;
   left: 0;
   font-size: 1.375em;
+  -webkit-perspective: 800;
+  perspective: 800;
 }
 #overlay .inner {
   width: 500px;
@@ -406,6 +407,9 @@ button * {
   cursor: default;
 }
 
+.hexagons li {
+  -webkit-transition: .2s all ease;
+}
 .hexagons li:hover {
   -webkit-transform: scale3d(.9, .9, 1);
 }
@@ -414,6 +418,13 @@ button * {
 .hexagons .player-1:hover,
 .hexagons .player-2:hover {
   -webkit-transform: none;
+}
+.message-continue i {
+  display: inline-block;
+  -webkit-transition: .2s all ease;
+}
+.message-continue:hover i {
+  -webkit-transform: scale3d(1.3,1.3,1) translateX(6px);
 }
 
 
