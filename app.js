@@ -73,13 +73,13 @@ HMDA.models.game = Backbone.Model.extend({
   },
 
   fetchAgencies: function() {
-    return $.getJSON('http://127.0.0.1:8181/json/agencies.json', function(data){
+    return $.getJSON('http://127.0.0.1:8000/json/agencies.json', function(data){
     });
 
   },
 
   fetchCities: function() {
-    return $.getJSON('http://127.0.0.1:8181/json/cities.json', function(data){
+    return $.getJSON('http://127.0.0.1:8000/json/cities.json', function(data){
     });
   },
 
