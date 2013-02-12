@@ -149,8 +149,8 @@ HMDA.models.square = Backbone.Model.extend({
 
   defaults: {
     type: 'home',
-    value: '',
-    dollarAmount: 0,
+    text: '',
+    value: 0,
     owner: undefined,
     x: 1,
     y: 1
@@ -336,16 +336,14 @@ HMDA.views.square = Backbone.View.extend({
 
     if (this.model.get('owner')) {
       this.$el.addClass('chosen');
-      this.model.set('value', this.model.get('value') + '<br />' + this.model.get('owner'));
+      this.model.set('text', this.model.get('text') + '<br />' + this.model.get('owner'));
     } else if (this.model.get('type') === 'city') {
       this.$el.addClass('city');
     } else if (this.model.get('type') === null) {
       this.$el.addClass('null');
     }
 
-    this.$el.html('<span>' + this.model.get('value') + '</span>').attr('data-x', this.model.get('x')).attr('data-y', this.model.get('y'));
-
-    console.log(this.model.toJSON());
+    this.$el.html('<span>' + this.model.get('text') + '</span>').attr('data-x', this.model.get('x')).attr('data-y', this.model.get('y'));
 
     return this;
 
@@ -387,10 +385,10 @@ HMDA.views.board = Backbone.View.extend({
       for (var col = 0; col < row_width; col += 1) {
 
         var model = new HMDA.models.square({x:col, y:row}),
-            dollarAmount = HMDA.game.getRand(50000, 500000);
+            value = HMDA.game.getRand(50000, 500000);
         model.set('type', 'home');
-        model.set('dollarAmount', dollarAmount);
-        model.set('value', HMDA.game.dollarize(dollarAmount));
+        model.set('value', value);
+        model.set('text', HMDA.game.dollarize(value));
         this.matrix[row][col] = new HMDA.views.square({
           model: model
         });
@@ -408,7 +406,7 @@ HMDA.views.board = Backbone.View.extend({
 
         if (!HMDA.game.getRand(0, 8)) {
           model.set('type', 'city');
-          model.set('value', model.getCity());
+          model.set('text', model.getCity());
         }
 
       }
