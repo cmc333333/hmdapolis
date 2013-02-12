@@ -164,10 +164,10 @@ HMDA.models.square = Backbone.Model.extend({
   },
 
   getStats: function() {
-    return $.getJSON('http://127.0.0.1:8000/json/apply.json', function(data) {
-      return data;
-    });
-  }
+    var player = HMDA.persons.at(HMDA.persons.length - 1),
+        cities = HMDA.board.nearbyCities(this.get('y'), this.get('x')),
+        city = cities[0].model.get('text'),
+        msa_md = HMDA.game.get('cityMap')[city];
 
 });
 
@@ -202,6 +202,17 @@ HMDA.views.game = Backbone.View.extend({
 
   newTurn: function() {
     this.model.newTurn();
+  },
+
+  endGame: function() {
+
+    this.$el.addClass('s-winner-player-' + this.model.get('currentPlayer'));
+
+    _.each(HMDA.board.points(), function(el, i) {
+      $('#players .player-' + (i + 1) + ' .score').html(HMDA.board.points()[i] + ' pts');
+    });
+    
+
   },
 
   setPlayer: function() {
@@ -242,7 +253,11 @@ HMDA.views.person = Backbone.View.extend({
     // there's a chrome bug that doesn't erase the previous node before redrawing
     // so we fadeout over 1 ms with a callback
     this.$el.fadeOut(1, function() {
-      $(this).html(self.template(self.model.toJSON())).fadeIn(1);
+
+      var json = self.model.toJSON();
+      json.income_str = HMDA.game.dollarize(json.income);
+      $(this).html(self.template(json)).fadeIn(1);
+
     });
 
     return this;
@@ -464,6 +479,55 @@ HMDA.views.board = Backbone.View.extend({
 
     }
 
+  },
+
+  maxOwner: function(owners) {
+    var max_owner = null;
+    var max_count = 0;
+    for (var i = 0; i < owners.length; i += 1) {
+      var owner_count = owners[i];
+      if (owner_count > max_count) {
+        max_count = owner_count;
+        max_owner = i;
+      } else if (owner_count == max_count) {
+        //  tie, so null out the owner
+        max_owner = null;
+      }
+    };
+    return max_owner;
+  },
+  cityOwner: function(row, col) {
+    var owners = Array(HMDA.game.get('numPlayers'));
+    _.each(this.getNeighbors(row, col), function(sq){
+      if (sq.model.get('owner')) {
+        if (!owners[sq.model.get('owner')]) 
+          owners[sq.model.get('owner')] = 0;
+        owners[sq.model.get('owner')] += 1;
+      }
+    });
+    return this.maxOwner(owners);
+  },
+
+  points: function() {
+
+    var numOwned = Array(HMDA.game.get('numPlayers'));
+    //  Fill with zeros
+    for (var i = 0; i < numOwned.length; i += 1) {
+      numOwned[i] = 0;
+    }
+    for (var row = 0; row < this.matrix.length; row += 1) {
+      for (var col = 0; col < this.matrix[row].length; col += 1) {
+        if (this.matrix[row][col].model.get('type') == 'city') {
+          var owner = this.cityOwner(row, col);
+          if (owner) {
+            if (!numOwned[owner-1]) numOwned[owner-1] = 0;
+            numOwned[owner-1] += 1;
+          }
+        }
+      }
+    }
+
+    return numOwned;
   }
 
 });
