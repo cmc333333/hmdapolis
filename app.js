@@ -164,7 +164,8 @@ HMDA.models.square = Backbone.Model.extend({
   },
 
   getStats: function() {
-    $.getJSON('http://192.168.53.16:8180?callback=?', function(data) {
+    return $.getJSON('http://127.0.0.1:8000/json/apply.json', function(data) {
+      return data;
     });
   }
 
@@ -303,6 +304,8 @@ HMDA.views.square = Backbone.View.extend({
   },
 
   playSquare: function() {
+
+    console.log(this.model.getStats());
 
     var x = this.model.get('x'),
         y = this.model.get('y');
