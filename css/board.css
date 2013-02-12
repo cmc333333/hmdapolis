@@ -4,16 +4,13 @@
 
 body {
   margin: 0;
-  padding: 60px 60px;
+  padding: 45px 60px;
   font-family: 'Oswald', arial, veradana, sans-serif;
   font-size: 100%;
+  /*background: white url(http://i396.photobucket.com/albums/pp48/mad626rad/crazybackground10.jpg) no-repeat bottom left;*/
+  background: white url(../img/bg_grid.png) repeat center center;
+  background-size: 150px;
   color: #FFFFFF;
-  background: #5C5655;
-  background: white url(http://i396.photobucket.com/albums/pp48/mad626rad/crazybackground10.jpg) no-repeat bottom left;
-  /*background: white url(http://i.imgur.com/723QP.jpg) no-repeat right center;*/
-  /*background: white url(../img/bg.jpg) no-repeat top right;
-  background-size: 2000px;*/
-  /*overflow: hidden;*/
 }
 p, h1 {
   margin: 0;
@@ -53,7 +50,7 @@ button * {
 }
 .console_block {
   display: block;
-  margin: 0 0 1px;
+  margin: 0 0 3px;
   padding: 20px;
   background: #5C5655;
   font-size: 1.375em; /* 22/16 */
@@ -79,7 +76,7 @@ button * {
   margin: 30px 0 6px;
   font-size: 75px;
   line-height: 1;
-  text-align: center;
+  text-align: left;
 }
 .console h1 span {
   font-weight: 300;
@@ -101,14 +98,14 @@ button * {
 }
 .players > li {
   display: block;
-  width: 110px;
+  width: 108px;
   padding: 20px;
   float: left;
   background: #5C5655;
 }
 .players > li:first-child {
   width: 109px;
-  margin-right: 1px
+  margin-right: 3px
 }
 .score {
   display: block;
@@ -170,6 +167,7 @@ button * {
 
 .message {
   position: relative;
+  margin-bottom: 3px;
   font-size: 1.5em;
 }
 .message-stats p {
@@ -190,7 +188,7 @@ button * {
   padding: .75em;
   float: right;
   font-size: 0.5em; /* 20/24 */
-  border: 1px solid rgba(255,255,255,1);
+  border: 3px solid rgba(255,255,255,1);
 }
 
 
@@ -273,7 +271,7 @@ button * {
   top: 50%;
   left: 50%;
   margin: -4em 0 0 -250px;
-  padding: 1px 1px 0;
+  padding: 3px 3px 0;
   background: rgba(255,255,255,.75);
   box-shadow: 0 0 16px rgba(0,0,0,1)
 }
@@ -282,6 +280,10 @@ button * {
 /*
  * Colors / Decorations / Icons / Backgrounds
  */
+
+.footer {
+  color: #282827;
+}
 
 .icon-holder {
   font-size: 1.1em;
@@ -322,15 +324,17 @@ button * {
 /* Default tile */
 .hexagons {
   color: #43AB7E;
+  text-shadow: -1px 0 0 rgba(255,255,255,.5);
 }
 .hexagons li > span {
-  background: rgba(232,232,232,.9);
+  background: #D0D0CE;
 }
 .hexagons li:before {
-  border-bottom-color: rgba(232,232,232,.9);
+  border-bottom-color: #D0D0CE;
 }
 .hexagons li:after {
-  border-top-color: rgba(232,232,232,.9);
+  /* rgba(232,232,232,.9) */
+  border-top-color: #D0D0CE;
 }
 
 /* City tile */
@@ -347,6 +351,7 @@ button * {
 }
 .hexagons .city {
   color: white;
+  text-shadow: none;
   background: transparent url(../img/nyc.png) no-repeat left top;
   background-size: 104px;
 }
@@ -382,6 +387,7 @@ button * {
 .hexagons .null {
   opacity: 0.2;
   color: #5C5655;
+  text-shadow: none;
 }
 
 /* Player tiles */
@@ -390,6 +396,7 @@ button * {
 }
 .hexagons .player-1 {
   color: rgba(255,255,255,0.5);
+  text-shadow: none;
 }
 .hexagons .player-1:before {
   border-bottom-color: #264859;
@@ -402,6 +409,7 @@ button * {
 }
 .hexagons .player-2 {
   color: rgba(255,255,255,0.5);
+  text-shadow: none;
 }
 .hexagons .player-2:before {
   border-bottom-color: #FF5E2C;
