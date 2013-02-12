@@ -302,25 +302,6 @@ HMDA.views.square = Backbone.View.extend({
 
   },
 
-  getNeighbors: function(x, y) {
-
-    //  Odd rows are off kilter. Account for that
-    var odd_offset = y % 2 * -1;
-    var pairs = [[-1, odd_offset], [-1, odd_offset + 1],  
-                [0, -1], [0, 1],
-                [1, odd_offset], [1,odd_offset + 1]];
-    var neighbors = Array();
-    _.each(pairs, function(pair) {
-        var mod_x = x + pair[1];
-        var mod_y = y + pair[0];
-        if (HMDA.board.matrix[mod_y] && HMDA.board.matrix[mod_y][mod_x]) {
-            neighbors.push($(HMDA.board.matrix[mod_y][mod_x].$el));
-        }
-    });
-    return neighbors;
-
-  },
-
   playSquare: function() {
 
     var x = this.model.get('x'),
