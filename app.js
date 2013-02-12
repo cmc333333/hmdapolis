@@ -422,12 +422,11 @@ HMDA.views.board = Backbone.View.extend({
 
     }
     //  Check every tile is playable
-    /*
     for (var row = 0; row < this.matrix.length; row += 1) {
       for (var col = 0; col < this.matrix[row].length; col += 1) {
         var model = this.matrix[row][col].model;
         if (model.get('type') == 'home' && !this.nearCity(row, col)) {
-          if (!model.getRand(0, 4)) {
+          if (!HMDA.game.getRand(0, 4)) {
             model.set('type', 'city');
             model.set('value', model.getCity());
           } else {
@@ -437,7 +436,6 @@ HMDA.views.board = Backbone.View.extend({
         }
       }
     }
-    */
   },
 
   render: function() {
