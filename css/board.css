@@ -51,7 +51,6 @@ button * {
 }
 .console_block {
   display: block;
-  margin: 0 0 3px;
   padding: 20px;
   background: #5C5655;
   font-size: 1.375em; /* 22/16 */
@@ -107,6 +106,9 @@ button * {
 .players > li:first-child {
   width: 109px;
   margin-right: 3px
+}
+.players.current-1 .player-2, .players.current-2 .player-1 {
+  padding-bottom: 17px;
 }
 .score {
   display: block;

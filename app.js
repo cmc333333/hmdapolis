@@ -68,8 +68,6 @@ HMDA.models.game = Backbone.Model.extend({
 
   newTurn: function() {
 
-    HMDA.persons.add();
-
     var currentPlayer = this.get('currentPlayer') + 1;
 
     if (currentPlayer > this.get('numPlayers')) {
@@ -77,6 +75,8 @@ HMDA.models.game = Backbone.Model.extend({
     }
 
     this.set('currentPlayer', currentPlayer);
+
+    HMDA.persons.add();
 
   },
 
@@ -112,8 +112,7 @@ HMDA.models.game = Backbone.Model.extend({
     HMDA.personsView = new HMDA.views.persons({collection: HMDA.persons});
     $('#players').append(HMDA.personsView.render().el);
 
-    HMDA.sfx.approved = new Audio('sfx/mortgage-approved.wav');
-    HMDA.sfx.denied = new Audio('sfx/mortgage-denied.wav');
+    new Audio('sfx/hmdapolis.wav').play();
 
   }
 
@@ -366,6 +365,7 @@ HMDA.views.person = Backbone.View.extend({
 
       var json = self.model.toJSON();
       json.income_str = HMDA.game.dollarize(json.income);
+      json.current_player = 'current-' + HMDA.game.get('currentPlayer');
       $(this).html(self.template(json)).fadeIn(1);
 
     });
