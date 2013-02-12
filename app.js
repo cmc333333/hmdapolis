@@ -21,7 +21,9 @@ var liveConfig = {
 var HMDA = HMDA || {
   models: {},
   views: {},
-  collections: {}
+  collections: {},
+  sfx: {},
+  server: localConfig
 };
 
 
@@ -109,6 +111,9 @@ HMDA.models.game = Backbone.Model.extend({
     HMDA.board = new HMDA.views.board({collection: HMDA.squares});
     HMDA.personsView = new HMDA.views.persons({collection: HMDA.persons});
     $('#players').append(HMDA.personsView.render().el);
+
+    HMDA.sfx.approved = new Audio('sfx/mortgage-approved.wav');
+    HMDA.sfx.denied = new Audio('sfx/mortgage-denied.wav');
 
   }
 
@@ -239,6 +244,89 @@ HMDA.views.game = Backbone.View.extend({
 
   setPlayer: function() {
     this.$el.removeClass().addClass('s-player-' + this.model.get('currentPlayer'));
+  },
+
+  startLoading: function() {
+    this.$el.addClass('s-waiting');
+  },
+
+  stopLoading: function(status) {
+
+    this.$el.removeClass('s-waiting');
+    this.showModal(status);
+    this.$el.find('li').removeClass('s-waiting s-approved s-denied');
+
+    if (status.success) {
+      this.$el.addClass('s-approved');
+      HMDA.sfx.approved.play();
+    } else {
+      this.$el.addClass('s-denied');
+      HMDA.sfx.denied.play();
+    }
+
+  },
+
+  showModal: function(status) {
+
+    var overlay = _.template($('#modal-overlay').html(), status);
+    $('#overlay').remove();
+    this.$el.append(overlay);
+    this.genChart(status.accepted, status.rejected);
+
+  },
+
+  genChart: function(accepted, rejected) {
+
+    new Highcharts.Chart({
+      chart: {
+          renderTo: 'comparison-chart',
+          backgroundColor: 'rgba(255,255,255,0)',
+          plotBackgroundColor: 'rgba(255,255,255,0)',
+          plotBorderWidth: null,
+          plotShadow: false,
+          spacingTop: 0,
+          spacingRight: 0,
+          spacingBottom: 0,
+          spacingLeft: 0
+      },
+      credits: {
+          enabled: false
+      },
+      title: {
+          text: null
+      },
+      tooltip: {
+        enabled: false
+      },
+      plotOptions: {
+          pie: {
+              size: '90%',
+              shadow: false,
+              borderWidth: '3',
+              dataLabels: {
+                  enabled: false
+              },
+              states: {
+                hover: {
+                  enabled: false
+                }
+              }
+          }
+      },
+      series: [{
+          type: 'pie',
+          name: 'Name example',
+          data: [
+              ['Approved',   accepted],
+              ['Denied',     rejected]
+          ]
+      }],
+      colors: [
+        '#43AB7E',
+        '#D44655'
+      ]
+    });
+
   },
 
   render: function() {
