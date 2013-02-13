@@ -235,7 +235,11 @@ HMDA.views.game = Backbone.View.extend({
   el: 'body',
 
   initialize: function() {
+
     this.model.on('change', this.setPlayer, this);
+    this.model.on('loading', this.startLoading, this);
+    this.model.on('stop-loading', this.stopLoading, this);
+
   },
 
   events: {
@@ -460,12 +464,18 @@ HMDA.views.square = Backbone.View.extend({
 
     $.when(this.model.getStats()).done(function(stats){
 
+      var timeout = (HMDA.server === localConfig) ? 1000 : 0;
+
       var success = (stats.accepted > stats.rejected) ? true : false,
           acceptedPercentage = Math.floor(100 * stats.accepted / 
             (stats.accepted + stats.rejected)),
           rejectedPercentage = 100 - acceptedPercentage;
 
-      HMDA.game.trigger('stop-loading', {success: success, accepted: acceptedPercentage, rejected: rejectedPercentage});
+      var start = function() {
+        HMDA.game.trigger('stop-loading', {success: success, accepted: acceptedPercentage, rejected: rejectedPercentage});
+      };
+
+      window.setTimeout(start, timeout);
 
       if (success) {
         self.model.set('owner', HMDA.game.get('currentPlayer'), {silent: true});
@@ -474,7 +484,7 @@ HMDA.views.square = Backbone.View.extend({
         self.model.set('owner', null);
         self.$el.addClass('null fail');
       }
-      
+
     });
 
   },
