@@ -7,7 +7,7 @@ module.exports = function(grunt) {
     meta: {
       version: '0.1.0'
     },
-    banner: 
+    banner:
       '/*          /$$$$$$          /$$      \n' +
       '           /$$__  $$        | $$      \n' +
       '  /$$$$$$$| $$  )__//$$$$$$ | $$$$$$$ \n' +
@@ -73,7 +73,7 @@ module.exports = function(grunt) {
     jasmine: {
       src: '<%= uglify.dist.src %>',
       options: {
-        specs: 'spec/*.js'
+        specs: 'specs/*.js'
       }
     },
     watch: {
@@ -91,7 +91,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  // Let's create a useful test command
+  // Let's create a useful test command.
   grunt.registerTask('test', ['jshint', 'jasmine']);
 
   // Default task.
