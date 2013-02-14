@@ -7,16 +7,28 @@ module.exports = function(grunt) {
     meta: {
       version: '0.1.0'
     },
-    banner: '/*! HMDAPOLIS - v<%= meta.version %> - ' +
+    banner: 
+      '/*          /$$$$$$          /$$      \n' +
+      '           /$$__  $$        | $$      \n' +
+      '  /$$$$$$$| $$  )__//$$$$$$ | $$$$$$$ \n' +
+      ' /$$_____/| $$$$   /$$__  $$| $$__  $$\n' +
+      '| $$      | $$_/  | $$  ) $$| $$  ) $$\n' +
+      '| $$      | $$    | $$  | $$| $$  | $$\n' +
+      '|  $$$$$$$| $$    | $$$$$$$/| $$$$$$$/\n' +
+      ' (_______/|__/    | $$____/ |_______/ \n' +
+      '                  | $$                \n' +
+      '                  | $$                \n' +
+      '                  |__/                */\n\n' +
+      '/*! HMDAPOLIS - v<%= meta.version %> - ' +
       '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
       '* http://consumerfinance.gov/\n' +
       '* Copyright (c) <%= grunt.template.today("yyyy") %> ' +
-      'CFPB; Licensed Apache 2.0 */\n',
+      'Consumer Financial Protection Bureau; Licensed Apache 2.0 */\n\n',
     // Task configuration.
     recess: {
       dist: {
         // form-builder.less is @imported in bootstrap.less
-        src: ['<%= banner %>', 'static/css/font-awesome.css', 'static/css/style.css'],
+        src: ['<%= banner %>', 'static/css/font-awesome.css', 'static/css/hmdapolis.css'],
         dest: 'static/css/hmdapolis.min.css',
         options: {
           compile: true,
@@ -29,7 +41,7 @@ module.exports = function(grunt) {
         banner: '<%= banner %>'
       },
       dist: {
-        src: ['static/js/jquery-1.9.0.min.js', 'static/js/underscore.js', 'static/js/backbone.js', 'static/js/highcharts.js', 'static/js/app.js'],
+        src: ['static/js/jquery-1.9.0.min.js', 'static/js/underscore.js', 'static/js/backbone.js', 'static/js/highcharts.js', 'static/js/hmdapolis.js'],
         dest: 'static/js/hmdapolis.min.js'
       }
     },
@@ -46,6 +58,7 @@ module.exports = function(grunt) {
         unused: true,
         boss: true,
         eqnull: true,
+        multistr: true,
         browser: true,
         globals: {
           jQuery: true,
@@ -55,17 +68,17 @@ module.exports = function(grunt) {
           Highcharts: true
         }
       },
-      all: ['Gruntfile.js', 'static/js/app.js']
+      all: ['Gruntfile.js', 'static/js/hmdapolis.js']
     },
-    jasmine : {
-      src : '<%= uglify.dist.src %>',
-      options : {
-        specs : 'tests/spec/*.js'
+    jasmine: {
+      src: '<%= uglify.dist.src %>',
+      options: {
+        specs: 'spec/*.js'
       }
     },
     watch: {
       gruntfile: {
-        files: ['<%= recess.dist.src %>', '<%= uglify.dist.src %>'],
+        files: ['Gruntfile.js', '<%= recess.dist.src %>', '<%= uglify.dist.src %>', '<%= jasmine.options.specs %>'],
         tasks: ['default']
       }
     }
@@ -82,6 +95,6 @@ module.exports = function(grunt) {
   grunt.registerTask('test', ['jshint', 'jasmine']);
 
   // Default task.
-  grunt.registerTask('default', ['recess', 'uglify']);
+  grunt.registerTask('default', ['test', 'recess', 'uglify']);
 
 };

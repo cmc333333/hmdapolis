@@ -1,12 +1,11 @@
-
-//   /$$   /$$ /$$      /$$ /$$$$$$$   /$$$$$$  /$$$$$$$   /$$$$$$  /$$       /$$$$$$  /$$$$$$ 
+//   /$$   /$$ /$$      /$$ /$$$$$$$   /$$$$$$  /$$$$$$$   /$$$$$$  /$$       /$$$$$$  /$$$$$$
 //  | $$  | $$| $$$    /$$$| $$__  $$ /$$__  $$| $$__  $$ /$$__  $$| $$      |_  $$_/ /$$__  $$
 //  | $$  | $$| $$$$  /$$$$| $$  \ $$| $$  \ $$| $$  \ $$| $$  \ $$| $$        | $$  | $$  \__/
-//  | $$$$$$$$| $$ $$/$$ $$| $$  | $$| $$$$$$$$| $$$$$$$/| $$  | $$| $$        | $$  |  $$$$$$ 
+//  | $$$$$$$$| $$ $$/$$ $$| $$  | $$| $$$$$$$$| $$$$$$$/| $$  | $$| $$        | $$  |  $$$$$$
 //  | $$__  $$| $$  $$$| $$| $$  | $$| $$__  $$| $$____/ | $$  | $$| $$        | $$   \____  $$
 //  | $$  | $$| $$\  $ | $$| $$  | $$| $$  | $$| $$      | $$  | $$| $$        | $$   /$$  \ $$
 //  | $$  | $$| $$ \/  | $$| $$$$$$$/| $$  | $$| $$      |  $$$$$$/| $$$$$$$$ /$$$$$$|  $$$$$$/
-//  |__/  |__/|__/     |__/|_______/ |__/  |__/|__/       \______/ |________/|______/ \______/ 
+//  |__/  |__/|__/     |__/|_______/ |__/  |__/|__/       \______/ |________/|______/ \______/
 
 /**
  *  DEBUGGING, BRO.
@@ -142,8 +141,7 @@ HMDA.models.person = Backbone.Model.extend({
     score: 0,
     income: 0,
     year: 0,
-    agency: '',
-    talk: 'Choose responsibly!'
+    agency: ''
   },
 
   initialize: function() {
@@ -481,7 +479,7 @@ HMDA.views.square = Backbone.View.extend({
 
     $.when(this.model.getStats()).done(function(stats){
 
-      var timeout = (HMDA.server.indexOf('static') !== -1) ? 1000 : 0;
+      var timeout = (HMDA.server.agencies.indexOf('static') !== -1) ? 1000 : 0;
 
       var success = (stats.accepted > stats.rejected) ? true : false,
           acceptedPercentage = Math.floor(100 * stats.accepted / (stats.accepted + stats.rejected)),
@@ -587,7 +585,7 @@ HMDA.views.board = Backbone.View.extend({
 
       for (col = 0; col < row_width; col += 1) {
 
-        model = new HMDA.models.square({x:col, y:row}),
+        model = new HMDA.models.square({x:col, y:row});
         //  This is a goodly range, but not very fun. Tweak it here
         //  var value = HMDA.game.getRand(75000, 275000);
         var value = HMDA.game.getRand(100000, 275000);
