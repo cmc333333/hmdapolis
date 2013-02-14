@@ -12,16 +12,19 @@
  *  DEBUGGING, BRO.
  **/
 
-var localConfig = {
+var config = {
   agencies: "http://127.0.0.1:8000/static/json/agencies.json",
   cities: "http://127.0.0.1:8000/static/json/cities.json",
   stats: "http://127.0.0.1:8000/static/json/apply.json?"
-}
-var liveConfig = {
+};
+
+/*
+var config = {
   agencies: "http://127.0.0.1:8180/agency/?callback=?",
   cities: "http://127.0.0.1:8180/city/?callback=?",
   stats: "http://127.0.0.1:8180/apply/?callback=?&"
-}
+};
+*/
 
 
 /**
@@ -32,8 +35,7 @@ var HMDA = HMDA || {
   models: {},
   views: {},
   collections: {},
-  sfx: {},
-  server: localConfig
+  server: config
 };
 
 
@@ -117,7 +119,7 @@ HMDA.models.game = Backbone.Model.extend({
 
     HMDA.persons = new HMDA.collections.persons([new HMDA.models.person()]);
     HMDA.gameView = new HMDA.views.game({model: HMDA.game});
-    HMDA.squares = new HMDA.collections.squares({model: new HMDA.models.square});
+    HMDA.squares = new HMDA.collections.squares({model: new HMDA.models.square()});
     HMDA.board = new HMDA.views.board({collection: HMDA.squares});
     HMDA.personsView = new HMDA.views.persons({collection: HMDA.persons});
     $('#players').append(HMDA.personsView.render().el);
@@ -153,8 +155,12 @@ HMDA.models.person = Backbone.Model.extend({
     this.set('year', HMDA.game.getRand(2006, 2011));
     var agency = HMDA.game.popRand(HMDA.game.get('agencies'));
     //  Don't show CFPB pre-20
-    if (this.get('year') > 2010 && agency == 'OTS') agency = 'CFPB';
-    if (this.get('year') < 2011 && agency == 'CFPB') agency = 'OTS';
+    if (this.get('year') > 2010 && agency === 'OTS') {
+      agency = 'CFPB';
+    }
+    if (this.get('year') < 2011 && agency === 'CFPB') {
+      agency = 'OTS';
+    }
     this.set('agency', agency);
 
     this.set('talk', HMDA.game.popRand(HMDA.game.get('talk')));
@@ -210,6 +216,17 @@ HMDA.models.square = Backbone.Model.extend({
         cities = HMDA.board.nearbyCities(this.get('y'), this.get('x')),
         city = cities[0].model.get('text'),
         msa_md = HMDA.game.get('cityMap')[city];
+
+    var params = {
+      year: player.get('year') % 2000,
+      loan_amount: Math.floor(this.get('value') / 1000),
+      msa_md: msa_md,
+      applicant_income: Math.floor(player.get('income') / 1000),
+      agency: player.get('agency')
+    };
+
+    return $.getJSON(HMDA.server.stats + $.param(params));
+  }
 
 });
 
@@ -464,7 +481,7 @@ HMDA.views.square = Backbone.View.extend({
 
     $.when(this.model.getStats()).done(function(stats){
 
-      var timeout = (HMDA.server === localConfig) ? 1000 : 0;
+      var timeout = (HMDA.server.indexOf('static') !== -1) ? 1000 : 0;
 
       var success = (stats.accepted > stats.rejected) ? true : false,
           acceptedPercentage = Math.floor(100 * stats.accepted / (stats.accepted + stats.rejected)),
@@ -534,7 +551,7 @@ HMDA.views.board = Backbone.View.extend({
     var pairs = [[-1, odd_offset], [-1, odd_offset + 1],  
                 [0, -1], [0, 1],
                 [1, odd_offset], [1,odd_offset + 1]];
-    var neighbors = Array();
+    var neighbors = [];
     var matrix = this.matrix;
     _.each(pairs, function(pair) {
         var mod_row = row + pair[0];
@@ -548,10 +565,11 @@ HMDA.views.board = Backbone.View.extend({
 
   nearCity: function(row, col) {
     var neighbors = this.getNeighbors(row, col);
-    var hasCity = false;
+    var cities = [];
     _.each(neighbors, function(neighbor) {
-      if (neighbor.model.get('type') == 'city')
-        hasCity = true;
+      if (neighbor.model.get('type') === 'city') {
+        cities.push(neighbor);
+      }
     });
     return hasCity;
   },
@@ -559,18 +577,20 @@ HMDA.views.board = Backbone.View.extend({
   populate: function() {
     this.matrix = [];
 
-    for (var row = 0; row < this.collection.height; row += 1) {
+    var row, col, model;
 
-      this.matrix[row] = Array();
+    for (row = 0; row < this.collection.height; row += 1) {
+
+      this.matrix[row] = [];
 
       var row_width = this.collection.width;
 
-      for (var col = 0; col < row_width; col += 1) {
+      for (col = 0; col < row_width; col += 1) {
 
-        var model = new HMDA.models.square({x:col, y:row}),
+        model = new HMDA.models.square({x:col, y:row}),
         //  This is a goodly range, but not very fun. Tweak it here
-        //    value = HMDA.game.getRand(75000, 275000);
-            value = HMDA.game.getRand(100000, 275000);
+        //  var value = HMDA.game.getRand(75000, 275000);
+        var value = HMDA.game.getRand(100000, 275000);
         model.set('type', 'home');
         model.set('value', value);
         model.set('text', HMDA.game.dollarize(value));
@@ -583,13 +603,13 @@ HMDA.views.board = Backbone.View.extend({
     }
 
     //  Now, flip some tiles to cities
-    for (var row = 0; row < this.matrix.length; row += 1) {
+    for (row = 0; row < this.matrix.length; row += 1) {
 
-      for (var col = 0; col < this.matrix[row].length; col += 1) {
+      for (col = 0; col < this.matrix[row].length; col += 1) {
 
-        var model = this.matrix[row][col].model;
+        model = this.matrix[row][col].model;
 
-        if (!HMDA.game.getRand(0, 8)) {
+        if (!HMDA.game.getRand(0, 8) && this.nearbyCities(row,col).length < 2) {
           model.set('type', 'city');
           model.set('text', model.getCity());
         }
@@ -598,11 +618,10 @@ HMDA.views.board = Backbone.View.extend({
 
     }
     //  Check every tile is playable
-    for (var row = 0; row < this.matrix.length; row += 1) {
-      for (var col = 0; col < this.matrix[row].length; col += 1) {
-        var model = this.matrix[row][col].model;
-        if (model.get('type') == 'home' && !this.nearCity(row, col)
-                && !HMDA.game.getRand(0,4)) {
+    for (row = 0; row < this.matrix.length; row += 1) {
+      for (col = 0; col < this.matrix[row].length; col += 1) {
+        model = this.matrix[row][col].model;
+        if (model.get('type') === 'home' && !this.nearbyCities(row, col).length && !HMDA.game.getRand(0,4)) {
             model.set('type', 'city');
             model.set('text', model.getCity());
         }
@@ -610,10 +629,10 @@ HMDA.views.board = Backbone.View.extend({
     }
     //  Final pass through, nulling out any locations still far from
     //  cities
-    for (var row = 0; row < this.matrix.length; row += 1) {
-      for (var col = 0; col < this.matrix[row].length; col += 1) {
-        var model = this.matrix[row][col].model;
-        if (model.get('type') == 'home' && !this.nearCity(row, col)){
+    for (row = 0; row < this.matrix.length; row += 1) {
+      for (col = 0; col < this.matrix[row].length; col += 1) {
+        model = this.matrix[row][col].model;
+        if (model.get('type') === 'home' && !this.nearbyCities(row, col).length){
             model.set('type', null);
             model.set('text', '');
         }
@@ -647,19 +666,20 @@ HMDA.views.board = Backbone.View.extend({
       if (owner_count > max_count) {
         max_count = owner_count;
         max_owner = i;
-      } else if (owner_count == max_count) {
+      } else if (owner_count === max_count) {
         //  tie, so null out the owner
         max_owner = null;
       }
-    };
+    }
     return max_owner;
   },
   cityOwner: function(row, col) {
-    var owners = Array(HMDA.game.get('numPlayers'));
+    var owners = [HMDA.game.get('numPlayers')];
     _.each(this.getNeighbors(row, col), function(sq){
       if (sq.model.get('owner')) {
-        if (!owners[sq.model.get('owner')]) 
+        if (!owners[sq.model.get('owner')]) {
           owners[sq.model.get('owner')] = 0;
+        }
         owners[sq.model.get('owner')] += 1;
       }
     });
@@ -668,17 +688,19 @@ HMDA.views.board = Backbone.View.extend({
 
   points: function() {
 
-    var numOwned = Array(HMDA.game.get('numPlayers'));
+    var numOwned = [HMDA.game.get('numPlayers')];
     //  Fill with zeros
     for (var i = 0; i < numOwned.length; i += 1) {
       numOwned[i] = 0;
     }
     for (var row = 0; row < this.matrix.length; row += 1) {
       for (var col = 0; col < this.matrix[row].length; col += 1) {
-        if (this.matrix[row][col].model.get('type') == 'city') {
+        if (this.matrix[row][col].model.get('type') === 'city') {
           var owner = this.cityOwner(row, col);
           if (owner) {
-            if (!numOwned[owner-1]) numOwned[owner-1] = 0;
+            if (!numOwned[owner-1]) {
+              numOwned[owner-1] = 0;
+            }
             numOwned[owner-1] += 1;
           }
         }
@@ -697,6 +719,6 @@ HMDA.views.board = Backbone.View.extend({
 
 $(function(){
 
-  HMDA.game = new HMDA.models.game;
+  HMDA.game = new HMDA.models.game();
 
 });

@@ -48,10 +48,20 @@ module.exports = function(grunt) {
         eqnull: true,
         browser: true,
         globals: {
-          jQuery: true
+          jQuery: true,
+          $: true,
+          Backbone: true,
+          _: true,
+          Highcharts: true
         }
       },
-      all: ['Gruntfile.js', 'static/css/style.css', 'static/js/app.js']
+      all: ['Gruntfile.js', 'static/js/app.js']
+    },
+    jasmine : {
+      src : '<%= uglify.dist.src %>',
+      options : {
+        specs : 'tests/spec/*.js'
+      }
     },
     watch: {
       gruntfile: {
@@ -67,6 +77,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
+
+  // Let's create a useful test command
+  grunt.registerTask('test', ['jshint', 'jasmine']);
 
   // Default task.
   grunt.registerTask('default', ['recess', 'uglify']);
