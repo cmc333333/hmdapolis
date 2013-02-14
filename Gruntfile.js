@@ -27,7 +27,6 @@ module.exports = function(grunt) {
     // Task configuration.
     recess: {
       dist: {
-        // form-builder.less is @imported in bootstrap.less
         src: ['<%= banner %>', 'static/css/font-awesome.css', 'static/css/hmdapolis.css'],
         dest: 'static/css/hmdapolis.min.css',
         options: {
