@@ -467,23 +467,21 @@ HMDA.views.square = Backbone.View.extend({
       var timeout = (HMDA.server === localConfig) ? 1000 : 0;
 
       var success = (stats.accepted > stats.rejected) ? true : false,
-          acceptedPercentage = Math.floor(100 * stats.accepted / 
-            (stats.accepted + stats.rejected)),
+          acceptedPercentage = Math.floor(100 * stats.accepted / (stats.accepted + stats.rejected)),
           rejectedPercentage = 100 - acceptedPercentage;
 
       var start = function() {
         HMDA.game.trigger('stop-loading', {success: success, accepted: acceptedPercentage, rejected: rejectedPercentage});
+        if (success) {
+          self.model.set('owner', HMDA.game.get('currentPlayer'), {silent: true});
+          self.$el.addClass('player-' + HMDA.game.get('currentPlayer'));
+        } else {
+          self.model.set('owner', null);
+          self.$el.addClass('null fail');
+        }
       };
 
       window.setTimeout(start, timeout);
-
-      if (success) {
-        self.model.set('owner', HMDA.game.get('currentPlayer'), {silent: true});
-        self.$el.addClass('player-' + HMDA.game.get('currentPlayer'));
-      } else {
-        self.model.set('owner', null);
-        self.$el.addClass('null fail');
-      }
 
     });
 
