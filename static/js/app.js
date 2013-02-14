@@ -13,9 +13,9 @@
  **/
 
 var localConfig = {
-  agencies: "http://127.0.0.1:8000/json/agencies.json",
-  cities: "http://127.0.0.1:8000/json/cities.json",
-  stats: "http://127.0.0.1:8000/json/apply.json?"
+  agencies: "http://127.0.0.1:8000/static/json/agencies.json",
+  cities: "http://127.0.0.1:8000/static/json/cities.json",
+  stats: "http://127.0.0.1:8000/static/json/apply.json?"
 }
 var liveConfig = {
   agencies: "http://127.0.0.1:8180/agency/?callback=?",
@@ -122,7 +122,7 @@ HMDA.models.game = Backbone.Model.extend({
     HMDA.personsView = new HMDA.views.persons({collection: HMDA.persons});
     $('#players').append(HMDA.personsView.render().el);
 
-    new Audio('sfx/hmdapolis.wav').play();
+    new Audio('/static/audio/hmdapolis.wav').play();
 
   }
 
@@ -279,10 +279,10 @@ HMDA.views.game = Backbone.View.extend({
 
     if (status.success) {
       this.$el.addClass('s-approved');
-      HMDA.sfx.approved.play();
+      new Audio('/static/audio/mortgage-approved.wav').play();
     } else {
       this.$el.addClass('s-denied');
-      HMDA.sfx.denied.play();
+      new Audio('/static/audio/mortgage-denied.wav').play();
     }
 
   },
