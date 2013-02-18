@@ -1,0 +1,33 @@
+{
+  "name": "hmdapolis",
+  "description": "CFPB's game about historical mortgage data",
+  "version": "0.1.0",
+  "homepage": "http://consumerfinance.gov",
+  "author": {
+    "name": "Consumer Financial Protection Bureau",
+    "email": "christopher.contolini@cfpb.gov",
+    "url": "http://consumerfinance.gov"
+  },
+  "licenses": [
+    {
+      "type": "Apache"
+    }
+  ],
+  "engines": {
+    "node": "~0.4"
+  },
+  "scripts": {
+    "test": "grunt jasmine"
+  },
+  "devDependencies": {
+    "grunt-contrib-uglify": "0.1.1rc6",
+    "grunt-contrib-jshint": "0.1.1rc6",
+    "grunt-contrib-jasmine": "0.3.1rc7",
+    "grunt-recess": "0.3.0",
+    "grunt-contrib-connect": "0.1.0",
+    "grunt-contrib-livereload": "0.1.1",
+    "grunt-regarde": "0.1.1",
+    "grunt": "0.4.0rc8"
+  },
+  "keywords": []
+}

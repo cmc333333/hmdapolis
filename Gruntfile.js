@@ -1,4 +1,10 @@
-/*global module:false*/
+var path = require('path');
+var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
+
+var folderMount = function folderMount(connect, point) {
+  return connect.static(path.resolve(point));
+};
+
 module.exports = function(grunt) {
 
   // Project configuration.
@@ -75,10 +81,20 @@ module.exports = function(grunt) {
         specs: 'specs/*.js'
       }
     },
-    watch: {
-      gruntfile: {
-        files: ['Gruntfile.js', '<%= recess.dist.src %>', '<%= uglify.dist.src %>', '<%= jasmine.options.specs %>'],
-        tasks: ['default']
+    connect: {
+      livereload: {
+        options: {
+          port: 8000,
+          middleware: function(connect, options) {
+            return [lrSnippet, folderMount(connect, '.')];
+          }
+        }
+      }
+    },
+    regarde: {
+      reload: {
+        files: ['index.html', 'static/css/hmdapolis.css', 'static/js/hmdapolis.js'],
+        tasks: ['recess', 'uglify', 'jasmine', 'livereload']
       }
     }
   });
@@ -88,12 +104,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-regarde');
+  grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-livereload');
 
   // Let's create a useful test command.
   grunt.registerTask('test', ['jshint', 'jasmine']);
 
   // Default task.
-  grunt.registerTask('default', ['test', 'recess', 'uglify']);
+  grunt.registerTask('default', ['livereload-start', 'connect', 'regarde']);
 
 };
