@@ -13,6 +13,7 @@ module.exports = function(grunt) {
     meta: {
       version: '0.1.0'
     },
+    // A silly banner.
     banner:
       '/*          /$$$$$$          /$$      \n' +
       '           /$$__  $$        | $$      \n' +
@@ -73,7 +74,7 @@ module.exports = function(grunt) {
           Highcharts: true
         }
       },
-      all: ['Gruntfile.js', 'static/js/hmdapolis.js']
+      all: ['static/js/hmdapolis.js']
     },
     jasmine: {
       src: '<%= uglify.dist.src %>',
