@@ -99,7 +99,7 @@ module.exports = function(grunt) {
     regarde: {
       reload: {
         files: ['index.html', 'static/css/hmdapolis.less', 'static/js/hmdapolis.js'],
-        tasks: ['recess', 'jshint', 'jasmine', 'livereload'],
+        tasks: ['recess', 'jshint', 'jasmine', 'uglify'],
         spawn: true
       }
     }
@@ -113,9 +113,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-regarde');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-livereload');
+  grunt.loadNpmTasks('grunt-notify');
 
-  // Je ne parle pas francais.
-  grunt.registerTask('watch', ['livereload-start', 'connect', 'regarde']);
+  // Je ne parle pas francais
+  grunt.registerTask('watch', 'regarde');
 
   // Let's create a useful test command.
   grunt.registerTask('test', ['jshint', 'jasmine']);
@@ -124,6 +125,6 @@ module.exports = function(grunt) {
   grunt.registerTask('build', ['recess', 'uglify']);
 
   // Default task.
-  grunt.registerTask('default', ['test', 'build']);
+  grunt.registerTask('default', ['livereload-start', 'connect', 'watch']);
 
 };

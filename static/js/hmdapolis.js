@@ -11,21 +11,20 @@
  *  DEBUGGING, BRO.
  **/
 
-/*
+
 var config = {
   agencies: "http://127.0.0.1:8000/static/json/agencies.json",
   cities: "http://127.0.0.1:8000/static/json/cities.json",
   stats: "http://127.0.0.1:8000/static/json/apply.json?"
 };
-*/
 
+/*
 var config = {
   agencies: "http://166.78.123.230:8180/agency/?callback=?",
   cities: "http://166.78.123.230:8180/city/?callback=?",
   stats: "http://166.78.123.230:8180/apply/?callback=?&"
 };
-
-
+*/
 
 /**
  *  IT'S GO TIME, GOGOGOGOGO
