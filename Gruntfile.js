@@ -114,8 +114,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-livereload');
 
-  // Je ne parle pas francais
-  grunt.registerTask('watch', 'regarde');
+  // Je ne parle pas francais.
+  grunt.registerTask('watch', ['livereload-start', 'connect', 'regarde']);
 
   // Let's create a useful test command.
   grunt.registerTask('test', ['jshint', 'jasmine']);
@@ -124,6 +124,6 @@ module.exports = function(grunt) {
   grunt.registerTask('build', ['recess', 'uglify']);
 
   // Default task.
-  grunt.registerTask('default', ['livereload-start', 'connect', 'watch']);
+  grunt.registerTask('default', ['test', 'build']);
 
 };

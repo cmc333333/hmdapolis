@@ -11,19 +11,20 @@
  *  DEBUGGING, BRO.
  **/
 
+/*
 var config = {
   agencies: "http://127.0.0.1:8000/static/json/agencies.json",
   cities: "http://127.0.0.1:8000/static/json/cities.json",
   stats: "http://127.0.0.1:8000/static/json/apply.json?"
 };
-
-/*
-var config = {
-  agencies: "http://127.0.0.1:8180/agency/?callback=?",
-  cities: "http://127.0.0.1:8180/city/?callback=?",
-  stats: "http://127.0.0.1:8180/apply/?callback=?&"
-};
 */
+
+var config = {
+  agencies: "http://166.78.123.230:8180/agency/?callback=?",
+  cities: "http://166.78.123.230:8180/city/?callback=?",
+  stats: "http://166.78.123.230:8180/apply/?callback=?&"
+};
+
 
 
 /**
@@ -481,8 +482,8 @@ HMDA.views.square = Backbone.View.extend({
 
       var timeout = (HMDA.server.agencies.indexOf('static') !== -1) ? 1000 : 0;
 
-      var success = (stats.accepted > stats.rejected) ? true : false,
-          acceptedPercentage = Math.floor(100 * stats.accepted / (stats.accepted + stats.rejected)),
+      var acceptedPercentage = Math.floor(100 * stats.accepted / (stats.accepted + stats.rejected)),
+          success = (Math.random()*100 < acceptedPercentage),
           rejectedPercentage = 100 - acceptedPercentage;
 
       var start = function() {
