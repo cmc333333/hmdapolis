@@ -34,7 +34,7 @@ module.exports = function(grunt) {
     // Task configuration.
     recess: {
       dist: {
-        src: ['<%= banner %>', 'static/css/font-awesome.css', 'static/css/hmdapolis.css'],
+        src: ['<%= banner %>', 'static/css/font-awesome.css', 'static/css/hmdapolis.less'],
         dest: 'static/css/hmdapolis.min.css',
         options: {
           compile: true,
@@ -53,24 +53,28 @@ module.exports = function(grunt) {
     },
     jshint: {
       options: {
+        //camelcase: true,
         curly: true,
         eqeqeq: true,
+        forin: true,
         immed: true,
         latedef: true,
         newcap: true,
         noarg: true,
+        plusplus: true,
+        //quotmark: true,
         sub: true,
         undef: true,
         unused: true,
         boss: true,
         eqnull: true,
-        multistr: true,
         browser: true,
         globals: {
           jQuery: true,
           $: true,
           Backbone: true,
           _: true,
+          module: true,
           Highcharts: true
         }
       },
@@ -94,8 +98,9 @@ module.exports = function(grunt) {
     },
     regarde: {
       reload: {
-        files: ['index.html', 'static/css/hmdapolis.css', 'static/js/hmdapolis.js'],
-        tasks: ['recess', 'uglify', 'jasmine', 'livereload']
+        files: ['index.html', 'static/css/hmdapolis.less', 'static/js/hmdapolis.js'],
+        tasks: ['recess', 'jshint', 'jasmine', 'livereload'],
+        spawn: true
       }
     }
   });
@@ -109,10 +114,16 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-livereload');
 
+  // Je ne parle pas francais
+  grunt.registerTask('watch', 'regarde');
+
   // Let's create a useful test command.
   grunt.registerTask('test', ['jshint', 'jasmine']);
 
+  // Let's create a useful build command.
+  grunt.registerTask('build', ['recess', 'uglify']);
+
   // Default task.
-  grunt.registerTask('default', ['livereload-start', 'connect', 'regarde']);
+  grunt.registerTask('default', ['livereload-start', 'connect', 'watch']);
 
 };

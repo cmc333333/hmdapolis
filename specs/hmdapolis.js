@@ -4,7 +4,4 @@ describe("HMDA game", function() {
     expect(HMDA.game.get('numPlayers')).toBeGreaterThan(HMDA.game.get('currentPlayer'));
   });
 
-
-
-
 });
