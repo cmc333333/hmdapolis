@@ -8,3 +8,11 @@
     |__/  |__/|__/     |__/|_______/ |__/  |__/|__/       \______/ |________/|______/ \______/ 
 
 
+Installation
+-------------
+
+1. Install [node and grunt-cli](https://github.cfpb.gov/contolini/grunt-init-cfpb#prerequisites)
+2. `$ git clone git@github.cfpb.gov:contolini/hmdapolis.git`
+3. `$ cd hmdapolis`
+3. `$ npm install` to download dependencies.
+4. `$ grunt build` to build everything.
