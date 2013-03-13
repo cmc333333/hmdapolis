@@ -11,20 +11,19 @@
  *  DEBUGGING, BRO.
  **/
 
-
+/*
 var config = {
   agencies: "http://127.0.0.1:8000/static/json/agencies.json",
   cities: "http://127.0.0.1:8000/static/json/cities.json",
   stats: "http://127.0.0.1:8000/static/json/apply.json?"
 };
+*/
 
-/*
 var config = {
   agencies: "http://166.78.123.230:8180/agency/?callback=?",
   cities: "http://166.78.123.230:8180/city/?callback=?",
   stats: "http://166.78.123.230:8180/apply/?callback=?&"
 };
-*/
 
 /**
  *  IT'S GO TIME, GOGOGOGOGO
@@ -262,7 +261,20 @@ HMDA.views.game = Backbone.View.extend({
   },
 
   newTurn: function() {
-    this.model.newTurn();
+
+    this.$el.removeClass('s-waiting s-approved s-denied');
+    this.$el.find('li').removeClass('s-waiting s-approved s-denied');
+
+    if ($('#board li:not([class])').length === 0) {
+
+      this.endGame();
+
+    } else {
+
+      this.model.newTurn();
+
+    }
+
   },
 
   endGame: function() {
@@ -274,7 +286,6 @@ HMDA.views.game = Backbone.View.extend({
     _.each(HMDA.board.points(), function(el, i) {
       $('#players .player-' + (i + 1) + ' .score').html(HMDA.board.points()[i] + ' pts');
     });
-    
 
   },
 
@@ -294,10 +305,12 @@ HMDA.views.game = Backbone.View.extend({
 
     if (status.success) {
       this.$el.addClass('s-approved');
-      new Audio('/static/audio/mortgage-approved.wav').play();
+      var approved = Audio('/static/audio/mortgage-approved.wav');
+      approved.play();
     } else {
       this.$el.addClass('s-denied');
-      new Audio('/static/audio/mortgage-denied.wav').play();
+      var denied = Audio('/static/audio/mortgage-denied.wav');
+      denied.play();
     }
 
   },
@@ -546,7 +559,7 @@ HMDA.views.board = Backbone.View.extend({
   getNeighbors: function(row, col) {
     //  Odd rows are off kilter. Account for that
     var odd_offset = row % 2 * -1;
-    var pairs = [[-1, odd_offset], [-1, odd_offset + 1],  
+    var pairs = [[-1, odd_offset], [-1, odd_offset + 1],
                 [0, -1], [0, 1],
                 [1, odd_offset], [1,odd_offset + 1]];
     var neighbors = [];
