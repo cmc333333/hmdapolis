@@ -33,7 +33,7 @@ module.exports = function(grunt) {
       'Consumer Financial Protection Bureau; Licensed Apache 2.0 */\n\n',
     // Task configuration.
     recess: {
-      dist: {
+      django: {
         src: ['<%= banner %>', 'static/css/font-awesome.css', 'static/css/hmdapolis.less'],
         dest: 'static/css/hmdapolis.min.css',
         options: {
@@ -75,6 +75,7 @@ module.exports = function(grunt) {
           Backbone: true,
           _: true,
           module: true,
+          console: true,
           Highcharts: true
         }
       },

@@ -8,21 +8,13 @@
 //  |__/  |__/|__/     |__/|_______/ |__/  |__/|__/       \______/ |________/|______/ \______/
 
 /**
- *  DEBUGGING, BRO.
+ *  ENDPOINTS, YO.
  **/
 
-/*
 var config = {
-  agencies: "http://127.0.0.1:8000/static/json/agencies.json",
-  cities: "http://127.0.0.1:8000/static/json/cities.json",
-  stats: "http://127.0.0.1:8000/static/json/apply.json?"
-};
-*/
-
-var config = {
-  agencies: "http://166.78.123.230:8180/agency/?callback=?",
-  cities: "http://166.78.123.230:8180/city/?callback=?",
-  stats: "http://166.78.123.230:8180/apply/?callback=?&"
+  agencies: "static/json/agencies.json",
+  cities: "static/json/cities.json",
+  stats: "https://api.consumerfinance.gov/data/hmda/slice/hmda_lar.json?"
 };
 
 /**
@@ -148,7 +140,7 @@ HMDA.models.person = Backbone.Model.extend({
     //  This is a goodly range, but for game purposes, we'll make it a bit
     //  harder
     //this.set('income', HMDA.game.getRand(30000, 250000));
-    this.set('income', HMDA.game.getRand(30000, 175000));
+    this.set('income', HMDA.game.getRand(40000, 175000));
     this.set('year', HMDA.game.getRand(2006, 2011));
     var agency = HMDA.game.popRand(HMDA.game.get('agencies'));
     //  Don't show CFPB pre-20
@@ -208,21 +200,35 @@ HMDA.models.square = Backbone.Model.extend({
 
   },
 
-  getStats: function() {
+  getStats: function( r ) {
     var player = HMDA.persons.at(HMDA.persons.length - 1),
         cities = HMDA.board.nearbyCities(this.get('y'), this.get('x')),
         city = cities[0].model.get('text'),
-        msa_md = HMDA.game.get('cityMap')[city];
+        msa_md = HMDA.game.get('cityMap')[city],
+        range = r || 20,
+        p = [],
+        url;
 
     var params = {
-      year: player.get('year') % 2000,
-      loan_amount: Math.floor(this.get('value') / 1000),
-      msa_md: msa_md,
-      applicant_income: Math.floor(player.get('income') / 1000),
-      agency: player.get('agency')
+      as_of_year: player.get('year'),
+      loan_amount_000s: Math.floor(this.get('value') / 1000),
+      msamd: "'" + msa_md + "'",
+      applicant_income_000s: Math.floor(player.get('income') / 1000)
     };
 
-    return $.getJSON(HMDA.server.stats + $.param(params));
+    _( params ).map(function( val, key ){
+      var ranges = ['loan_amount_000s', 'applicant_income_000s'];
+      if ( _( ranges ).contains( key ) ) {
+        p.push( key + '<' + ( val + range ) );
+        p.push( key + '>' + ( val - range ) );
+      } else {
+        p.push( key + '=' + val );
+      }
+    });
+
+    url = HMDA.server.stats + '$where=(action_taken>=1 AND action_taken<=3) AND ' + p.join(' AND ') + '&$select=COUNT(),action_taken&$group=action_taken&$orderBy=action_taken+ASC';
+
+    return $.getJSON( url );
   }
 
 });
@@ -253,6 +259,10 @@ HMDA.views.game = Backbone.View.extend({
     this.model.on('change', this.setPlayer, this);
     this.model.on('loading', this.startLoading, this);
     this.model.on('stop-loading', this.stopLoading, this);
+
+    var overlay = _.template($('#modal-overlay').html(), {success: true, accepted: 1, rejected: 1});
+    $('#overlay').remove();
+    this.$el.append(overlay);
 
   },
 
@@ -305,17 +315,19 @@ HMDA.views.game = Backbone.View.extend({
 
     if (status.success) {
       this.$el.addClass('s-approved');
-      var approved = Audio('/static/audio/mortgage-approved.wav');
+      var approved = new Audio('/static/audio/mortgage-approved.wav');
       approved.play();
     } else {
       this.$el.addClass('s-denied');
-      var denied = Audio('/static/audio/mortgage-denied.wav');
+      var denied = new Audio('/static/audio/mortgage-denied.wav');
       denied.play();
     }
 
   },
 
   showModal: function(status) {
+
+    console.log(status);
 
     var overlay = _.template($('#modal-overlay').html(), status);
     $('#overlay').remove();
@@ -480,6 +492,10 @@ HMDA.views.square = Backbone.View.extend({
 
   playSquare: function() {
 
+    var self = this,
+        initStats,
+        checkStats;
+
     if (this.$el.is('.null, .city')) {
       return;
     }
@@ -487,31 +503,52 @@ HMDA.views.square = Backbone.View.extend({
     HMDA.game.trigger('loading');
     this.$el.addClass('s-waiting');
 
-    var x = this.model.get('x'),
-        y = this.model.get('y');
+    initStats = function(){
 
-    $.when(this.model.getStats()).done(function(stats){
+      $.when(self.model.getStats()).done(function( stats ){
 
-      var timeout = (HMDA.server.agencies.indexOf('static') !== -1) ? 1000 : 0;
-
-      var acceptedPercentage = Math.floor(100 * stats.accepted / (stats.accepted + stats.rejected)),
-          success = (Math.random()*100 < acceptedPercentage),
-          rejectedPercentage = 100 - acceptedPercentage;
-
-      var start = function() {
-        HMDA.game.trigger('stop-loading', {success: success, accepted: acceptedPercentage, rejected: rejectedPercentage});
-        if (success) {
-          self.model.set('owner', HMDA.game.get('currentPlayer'), {silent: true});
-          self.$el.addClass('player-' + HMDA.game.get('currentPlayer'));
-        } else {
-          self.model.set('owner', null);
-          self.$el.addClass('null fail');
+        if ( stats.computing ) {
+          return;
         }
-      };
 
-      window.setTimeout(start, timeout);
+        if ( _.isEmpty( stats.results[0] ) || _.isEmpty( stats.results[2] ) ) {
+          stats.results = [{
+            count: 1
+          },{
+            count: 1
+          },{
+            count: 10
+          }];
+        }
 
-    });
+        clearInterval( checkStats );
+
+        var timeout = (HMDA.server.agencies.indexOf('static') !== -1) ? 1000 : 0,
+            accepted = stats.results[0].count,
+            rejected = stats.results[2].count;
+
+        var acceptedPercentage = Math.floor(100 * accepted / ( accepted + rejected )),
+            rejectedPercentage = 100 - acceptedPercentage,
+            success = accepted > rejected;
+
+        var start = function() {
+          HMDA.game.trigger('stop-loading', {success: success, accepted: acceptedPercentage, rejected: rejectedPercentage});
+          if (success) {
+            self.model.set('owner', HMDA.game.get('currentPlayer'), {silent: true});
+            self.$el.addClass('player-' + HMDA.game.get('currentPlayer'));
+          } else {
+            self.model.set('owner', null);
+            self.$el.addClass('null fail');
+          }
+        };
+
+        window.setTimeout(start, timeout);
+
+      });
+
+    };
+
+    checkStats = setInterval( initStats, 500 );
 
   },
 
@@ -601,7 +638,7 @@ HMDA.views.board = Backbone.View.extend({
         model = new HMDA.models.square({x:col, y:row});
         //  This is a goodly range, but not very fun. Tweak it here
         //  var value = HMDA.game.getRand(75000, 275000);
-        var value = HMDA.game.getRand(100000, 275000);
+        var value = HMDA.game.getRand(100000, 675000);
         model.set('type', 'home');
         model.set('value', value);
         model.set('text', HMDA.game.dollarize(value));
