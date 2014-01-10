@@ -85,6 +85,9 @@ button * {
   width: 334px;
   margin: 16px 0 6px -18px;
 }
+.console p + p {
+  margin-top: 12px;
+}
 
 
 /*
@@ -192,6 +195,19 @@ button * {
   float: right;
   font-size: 0.5em; /* 20/24 */
   border: 3px solid rgba(255,255,255,1);
+}
+.message-instructions {
+  margin-top: 1em;
+  padding: 0;
+  font-size: 1.125em; /* 18 / 16 */
+  font-weight: 300;
+  line-height: 1.5;
+  background: transparent;
+  color: #264859;
+}
+.message-instructions i {
+  display: inline-block;
+  float: left;
 }
 
 
@@ -343,6 +359,9 @@ button * {
 }
 .message.message-continue .icon-holder:before {
   content: "\f061";
+}
+.message.message-instructions .icon-holder:before {
+  content: "\f059";
 }
 
 /* Default tile */
@@ -558,6 +577,7 @@ button * {
 .message {
   display: none;
 }
+.message-instructions,
 .s-waiting .message.message-waiting,
 .s-denied .message.message-denied,
 .s-approved .message.message-approved,
