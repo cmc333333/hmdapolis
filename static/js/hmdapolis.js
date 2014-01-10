@@ -638,7 +638,7 @@ HMDA.views.board = Backbone.View.extend({
         model = new HMDA.models.square({x:col, y:row});
         //  This is a goodly range, but not very fun. Tweak it here
         //  var value = HMDA.game.getRand(75000, 275000);
-        var value = HMDA.game.getRand(100000, 675000);
+        var value = HMDA.game.getRand(100000, 575000);
         model.set('type', 'home');
         model.set('value', value);
         model.set('text', HMDA.game.dollarize(value));
