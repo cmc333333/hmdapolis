@@ -24,11 +24,72 @@
   <body>
     <table id="board">
 
-    </table>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
-    <!--<script src="http://backbonejs.org/backbone.js"></script> <!-- for debugging -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>
-    <script src="app.js"></script>
+    <!--
+      s-waiting
+      s-denied
+      s-approved
+      s-player-1 (player 1's turn)
+      s-player-2 (player 2's turn)
+      s-winner-player-1
+      s-winner-player-2
+    -->
+    
+    <div class="wrapper">
+      
+      <div class="console">
+        
+        <h1><img src="static/img/hmdapolis_logo.png" alt="HMDApolis"></h1>
+        
+        <div id="players">
+          
+        </div>
+
+        <div class="console_block message message-instructions">
+          <p>HMDApolis was inspired by and uses data from the Home Mortgage Disclosure Act.</p>
+          <p><strong>Here's how to play:</strong> Each round a new profile is generated using HMDA data. Use this profile to to help you compete against your opponent to capture the most cities. Capture a city by having the most accepted loans around it.</p>
+        </div>
+
+      </div>
+
+      <div id="board" class="hexagons">
+        
+      </div>
+
+    </div>
+
+    <!-- templates -->
+
+    <script type="text/template" id="person-stats">
+    <ul class="console_block players <%= current_player %>">
+      <li class="player-1">Player 1 <i class="icon-holder"></i><span class="score"></span></li>
+      <li class="player-2">Player 2 <i class="icon-holder"></i><span class="score"></span></li>
+    </ul>
+    <div class="console_block profile">
+    <ul>
+      <li><i class="icon-user icon-3x"></i> <p class="talk"><%= talk %></p></li>
+      <li><b>Year:</b> <%= year %></li>
+      <li><b>Income:</b> <%= income_str %></li>
+      <li><b>Financial Agency:</b> <%= agency %></li>
+    </ul>
+    </div>
+    </script>
+
+    <script type="text/template" id="modal-overlay">
+    <div id="overlay" class="s-active">
+      <div class="inner">
+        <div class="console_block message message-waiting"><i class="icon-holder icon-spin"></i> Crunching HMDA data...</div>
+        <div class="console_block message message-stats">
+          <div id="comparison-chart"></div>
+          <p>When comparing your current criteria to past HMDA data, <strong><%= accepted %>% of people were approved</strong> and <strong><%= rejected %>% were denied</strong>.</p>
+        </div>
+        <div class="console_block message message-denied"><i class="icon-holder"></i> You were Denied! <button class="console_block message message-continue" type="button">Continue <i class="icon-holder"></i></button></div>
+        <div class="console_block message message-approved"><i class="icon-holder"></i> You were Approved! <button class="console_block message message-continue" type="button">Continue <i class="icon-holder"></i></button></div>
+      </div>
+    </div>
+    </script>
+
+    <!-- /templates -->
+
+    <script src="static/js/hmdapolis.min.js"></script>
   </body>
 </html>
