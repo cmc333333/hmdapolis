@@ -7,7 +7,11 @@
     | $$  | $$| $$ \/  | $$| $$$$$$$/| $$  | $$| $$      |  $$$$$$/| $$$$$$$$ /$$$$$$|  $$$$$$/
     |__/  |__/|__/     |__/|_______/ |__/  |__/|__/       \______/ |________/|______/ \______/ 
 
-HMDApolis (pronounced *hum-dapolis*) is a two-player turn-based strategy game utilizing live [HMDA data](http://www.consumerfinance.gov/hmda/). It was created by @cmc333333, @contolini and @himedlooff during a February 2013 weekend hackathon at the [Consumer Financial Protection Bureau](http://www.consumerfinance.gov/). Art is by @duelj.
+# HMDApolis [![Build Status](https://secure.travis-ci.org/cfpb/hmdapolis.png?branch=master)](http://travis-ci.org/cfpb/hmdapolis)
+
+HMDApolis (pronounced *hum-dapolis*) is a two-player turn-based strategy game utilizing live [HMDA data](http://www.consumerfinance.gov/hmda/). It was created by [@cmc333333](https://github.com/cmc333333), [@contolini](https://github.com/contolini) and [@himedlooff](https://github.com/himedlooff) during a February 2013 weekend hackathon at the [Consumer Financial Protection Bureau](http://www.consumerfinance.gov/). Art is by [@duelj](https://github.com/duelj).
+
+![hmdapolis screenshot](http://i.imgur.com/npLv0cr.png)
 
 ## How to play
 
