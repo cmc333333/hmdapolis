@@ -55,6 +55,11 @@ HMDA.models.game = Backbone.Model.extend({
         return agency.id;
       });
 
+      var cityMap = {};
+      $.each(cities[0], function(msa_md, name) {
+        cityMap[name] = msa_md;
+      });
+
       cities = _.map(cities[0], function(city){
         return city;
       });
@@ -62,6 +67,8 @@ HMDA.models.game = Backbone.Model.extend({
       HMDA.game.set('agencies', agencies);
 
       HMDA.game.set('cities', cities);
+
+      HMDA.game.set('cityMap', cityMap);
 
       self.startGame();
 
@@ -95,17 +102,16 @@ HMDA.models.game = Backbone.Model.extend({
   },
 
   fetchAgencies: function() {
-    return $.getJSON('http://127.0.0.1:8000/json/agencies.json', function(data){
-    });
-
+    return $.getJSON(HMDA.server.agencies);
   },
 
   fetchCities: function() {
-    return $.getJSON('http://127.0.0.1:8000/json/cities.json', function(data){
-    });
+    return $.getJSON(HMDA.server.cities);
   },
 
   startGame: function() {
+
+    var theme = new Audio('static/audio/hmdapolis.wav');
 
     HMDA.persons = new HMDA.collections.persons([new HMDA.models.person()]);
     HMDA.gameView = new HMDA.views.game({model: HMDA.game});
@@ -114,7 +120,7 @@ HMDA.models.game = Backbone.Model.extend({
     HMDA.personsView = new HMDA.views.persons({collection: HMDA.persons});
     $('#players').append(HMDA.personsView.render().el);
 
-    new Audio('/static/audio/hmdapolis.wav').play();
+    theme.play();
 
   }
 
@@ -267,7 +273,7 @@ HMDA.views.game = Backbone.View.extend({
   },
 
   events: {
-    'click h1': 'newTurn'
+    'click .message-continue': 'newTurn'
   },
 
   newTurn: function() {
@@ -315,11 +321,11 @@ HMDA.views.game = Backbone.View.extend({
 
     if (status.success) {
       this.$el.addClass('s-approved');
-      var approved = new Audio('/static/audio/mortgage-approved.wav');
+      var approved = new Audio('static/audio/mortgage-approved.wav');
       approved.play();
     } else {
       this.$el.addClass('s-denied');
-      var denied = new Audio('/static/audio/mortgage-denied.wav');
+      var denied = new Audio('static/audio/mortgage-denied.wav');
       denied.play();
     }
 
@@ -446,7 +452,7 @@ HMDA.views.person = Backbone.View.extend({
 
 HMDA.views.persons = Backbone.View.extend({
 
-  el: '.profile',
+  el: '#players',
 
   initialize: function() {
     this.collection.on('add', this.addOne, this);
@@ -611,7 +617,7 @@ HMDA.views.board = Backbone.View.extend({
     return neighbors;
   },
 
-  nearCity: function(row, col) {
+  nearbyCities: function(row, col) {
     var neighbors = this.getNeighbors(row, col);
     var cities = [];
     _.each(neighbors, function(neighbor) {
@@ -619,7 +625,7 @@ HMDA.views.board = Backbone.View.extend({
         cities.push(neighbor);
       }
     });
-    return hasCity;
+    return cities;
   },
 
   populate: function() {
@@ -757,7 +763,6 @@ HMDA.views.board = Backbone.View.extend({
 
     return numOwned;
   }
-
 });
 
 
