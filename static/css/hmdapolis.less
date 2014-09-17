@@ -126,6 +126,7 @@ button * {
  */
 
 .profile {
+  position: relative;
   padding: 20px 0 20px 20px;
 }
 .profile li {
@@ -142,28 +143,30 @@ button * {
   margin-left: -.1em;
 }
 .profile .talk {
-  position: relative;
+  position: absolute;
+  top: 62%;
+  right: 80%;
+  width: 8em;
+  margin: 0;
   font-size: 12px;
   font-weight: 300;
   text-align: center;
-  width: 6em;
-  margin: 0 0 0 -2.75em;
-  padding: 10px;
-  background: #3A5969;
-  border-radius: 8px;
 }
 .profile .talk:before {
   content: "";
   display: block;
-  position: absolute;
-  top: -4px;
-  left: 66%;
+  margin-left: 76%;
   width: 0;
   height: 0;
   overflow: hidden;
   border-left: 4px dotted transparent;
   border-right: 4px dotted transparent;
   border-bottom: 4px solid #3A5969;
+}
+.profile .talk_bubble {
+  display: block;
+  padding: 10px;
+  border-radius: 8px;
 }
 
 
@@ -320,13 +323,13 @@ button * {
 .players .player-2 {
   background: #FF5E2C;
 }
-.profile .talk {
+.profile .talk_bubble {
   background: #3A5969;
 }
 .profile .talk:before {
   border-bottom-color: #3A5969;
 }
-.s-player-2 .profile .talk {
+.s-player-2 .profile .talk_bubble {
   background: #FF6C36;
 }
 .s-player-2 .profile .talk:before {
@@ -527,11 +530,11 @@ button * {
 }
 @-webkit-keyframes talk {
     from {
-      margin-left: -4.5em;
+      right: 90%;
     }
 
     to {
-      margin-left: -2.75em;
+      right: 80%;
     }
 }
 /* Player turn */
