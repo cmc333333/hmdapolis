@@ -126,8 +126,10 @@ button * {
 }
 .profile li {
   display: block;
-  margin-right: 10px;
   float: left;
+}
+.profile li:first-child {
+    margin-right: 10px;
 }
 .profile b {
   margin-right: 4px;
@@ -139,18 +141,19 @@ button * {
 }
 .profile .talk {
   position: absolute;
-  top: 62%;
-  right: 80%;
-  width: 8em;
-  margin: 0;
-  font-size: 12px;
+  top: 65%;
+  left: 0;
+  width: 12em;
+  margin: 0 0 0 -1em;
+  font-size: 14px;
   font-weight: 300;
-  text-align: center;
+  line-height: 1.4em;
 }
 .profile .talk:before {
   content: "";
+  position: relative;
   display: block;
-  margin-left: 76%;
+  margin-left: 3em;
   width: 0;
   height: 0;
   overflow: hidden;
@@ -160,8 +163,9 @@ button * {
 }
 .profile .talk_bubble {
   display: block;
-  padding: 10px;
+  padding: 9px 12px 12px;
   border-radius: 8px;
+  box-shadow: 0 0 3px rgba(0,0,0,.7);
 }
 
 
@@ -173,6 +177,10 @@ button * {
   position: relative;
   margin-bottom: 3px;
   font-size: 1.5em;
+}
+.message-small {
+    font-size: .75em;
+    font-weight: 300;
 }
 .message-stats p {
   font-size: 24px;
@@ -525,11 +533,11 @@ button * {
 }
 @-webkit-keyframes talk {
     from {
-      right: 90%;
+      margin-left: -2em;
     }
 
     to {
-      right: 80%;
+      margin-left: -1em;
     }
 }
 /* Player turn */

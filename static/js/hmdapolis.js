@@ -41,7 +41,11 @@ HMDA.models.game = Backbone.Model.extend({
     currentPlayer: 1,
     agencies: [],
     cities: [],
-    talk: ["Choose responsibly!", "Dallas looks nice this time of year.", "It's a buyer's market!", "I ain't afraid of no foreclosure."],
+    talk: [
+      "Loans bordering multiple cities are more strategic!",
+      "A loan tile becomes unusable once denied.",
+      "Block your opponent by purposefully getting denied."
+    ],
     cityMap: {}
   },
 
