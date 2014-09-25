@@ -4,7 +4,7 @@
 
 body {
   margin: 0;
-  padding: 42px 60px;
+  padding: 52px 60px;
   font-family: 'Oswald', arial, veradana, sans-serif;
   font-size: 100%;
   color: #FFFFFF;
@@ -38,6 +38,22 @@ button * {
  * Layout
  */
 
+.disclaimer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 4px 60px 6px;
+  background: #43AB7E;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.041666667em;
+  text-align: center;
+
+  &_icon[class*="icon-"] {
+    font-size: 1.25em;
+  }
+}
 .wrapper {
   width: 1170px;
   margin: 0 auto;
@@ -102,7 +118,7 @@ button * {
 
   &__top2 {
     top: 53px;
-    left: 94px;
+    left: 85px;
     z-index: 1;
   }
 
@@ -348,6 +364,7 @@ button * {
   top: 0;
   right: 0;
   bottom: 0;
+  z-index: 100;
   left: 0;
   font-size: 1.375em;
   -webkit-perspective: 800;
